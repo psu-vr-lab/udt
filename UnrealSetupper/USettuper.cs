@@ -46,7 +46,7 @@ namespace UnrealSetupper
     ""Description"": """",
     ""Modules"": [
         {
-            ""Name"":" + $"\"{projectName}Core\"" + "," + @"
+            ""Name"": " + $"\"{projectName}Core\"" + "," + @"
             ""Type"": ""Runtime"",
             ""LoadingPhase"": ""Default""
         }
@@ -107,13 +107,12 @@ public class " + projectName + className + @"Target : TargetRules
                     sw.WriteLine(@"using UnrealBuildTool;
 public class " + $"{projectName}" + @"Core : ModuleRules
 {
-	public BobCore(ReadOnlyTargetRules Target) : base(Target)
+	public "+$"{projectName}"+@"Core(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		bEnforceIWYU = true;
 		PublicDependencyModuleNames.AddRange(new string[] {" + $" \"Core\", \"CoreUObject\", \"Engine\" " + @"});
         PrivateDependencyModuleNames.AddRange(new string[] { });
-
     }
 }");
                 }
@@ -141,17 +140,17 @@ class F" + $"{projectName}" + @"Core : public IModuleInterface
 {
 public:
 	static inline F" +$"{projectName}" +@"Core& Get()
-        {
-            return FModuleManager::LoadModuleChecked<F"+$"{projectName}"+ @"Core>(" + $"{projectName}" + @");
-        }
+    {
+        return FModuleManager::LoadModuleChecked<F"+$"{projectName}"+ @"Core>(" + $"\"{projectName}Core\"" + @");
+    }
 
-        static inline bool IsAvailable()
-        {
-            return FModuleManager::Get().IsModuleLoaded(" + $"{projectName}" + @");
-        }
+     static inline bool IsAvailable()
+    {
+        return FModuleManager::Get().IsModuleLoaded(" + $"\"{projectName}Core\"" + @");
+    }
 
-        virtual void StartupModule() override;
-	    virtual void ShutdownModule() override;
+    virtual void StartupModule() override;
+    virtual void ShutdownModule() override;
 };");
                 }
             }
@@ -160,6 +159,120 @@ public:
                 Console.WriteLine("Exception: " + e.Message);
             }
         }
+        /// <summary>
+        /// Unreal Module .cpp Primary
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="projectName"></param>
+        public static void UMC(string filePath, string projectName)
+        {
+            try
+            {
+                using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
+                {
+                    sw.WriteLine(@"#include " + $"\"{projectName}Core.h\"" + @"
+#include ""Modules/ModuleManager.h""
+#include ""Log.h""
+void F" + $"{projectName}" + @"Core::StartupModule()
+{
+    UE_LOG(Log" + $"{projectName}" + @"Core, Log, TEXT("" " + $"{projectName}Core " + @"module starting up""));
+}
 
+void F" + $"{projectName}" + @"Core::ShutdownModule()
+{
+    UE_LOG(Log" + $"{projectName}" + @"Core, Log, TEXT("" " + $"{projectName}Core " + @"module shutting down""));
+}
+
+IMPLEMENT_PRIMARY_GAME_MODULE(F" + $"{projectName}" + @"Core, " + $"{projectName}" + @"Core, " + $"\"{projectName}Core\"" + @"); ");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Unreal Log Header
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="projectName"></param>
+        public static void ULH(string filePath, string projectName)
+        {
+            try
+            {
+                using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
+                {
+                    sw.WriteLine(@"#pragma once
+#include ""Logging/LogMacros.h""
+
+DECLARE_LOG_CATEGORY_EXTERN(Log" + $"{projectName}" +@"Core, All, All);");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
+        /// <summary>
+        /// Unreal Log .cpp
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="projectName"></param>
+        public static void ULC(string filePath, string projectName)
+        {
+            try
+            {
+                using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
+                {
+                    sw.WriteLine(@"#include ""Log.h""
+DEFINE_LOG_CATEGORY(Log" + $"{projectName}" + @"Core);
+                    ");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
+        /// <summary>
+        /// Generate Build Bat file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="projectName"></param>
+        public static void GBB(string filePath, string projectName, USettuperConfig config)
+        {
+            try
+            {
+                using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
+                {
+                    sw.WriteLine(@"@echo off" + $"\n\"{config.UnrealDir}" + @"\Engine\Build\BatchFiles\Build.bat"" " + $"{projectName}Editor Win64 Development " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" -waitmutex -NoHotReload");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
+        /// <summary>
+        /// Generate Editor Bat file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="projectName"></param>
+        /// <param name="config"></param>
+        public static void GEB(string filePath, string projectName, USettuperConfig config)
+        {
+            try
+            {
+                using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
+                {
+                    sw.WriteLine(@"@echo off" + $"\ncall \"{config.UnrealDir}" + @"\Engine\Binaries\Win64\UE4Editor.exe "" " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" %*");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
     }
 }
