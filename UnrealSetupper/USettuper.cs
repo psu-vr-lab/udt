@@ -7,10 +7,32 @@ using System.Threading.Tasks;
 using System.Text.Json;
 namespace UnrealSetupper
 {
+    internal static class Output
+    {
+        internal static void Succses(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(message);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        internal static void Error(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(message);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+    }
     internal class USettuperConfig
     {
         public string? UnrealDir { get; set; }
         public string? ProjectsDir { get; set; }
+    }
+
+    internal class USettuperProjectConfig
+    {
+        public string? Name { get; set; }
+        public string? ProjectDir { get; set; }
     }
 
     internal static class USettuper
@@ -37,6 +59,7 @@ namespace UnrealSetupper
         {
             try
             {
+                Console.Write("\nCreating .uproject file...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"{
@@ -53,10 +76,11 @@ namespace UnrealSetupper
     ]
 }");
                 }
+                Output.Succses("OK!");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
         /// <summary>
@@ -74,6 +98,7 @@ namespace UnrealSetupper
             }
             try
             {
+                Console.Write("\nCreating Unreal Module Target files...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"using UnrealBuildTool;
@@ -87,10 +112,11 @@ public class " + projectName + className + @"Target : TargetRules
     }
 }");
                 }
+                Output.Succses("OK!");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
         /// <summary>
@@ -102,6 +128,7 @@ public class " + projectName + className + @"Target : TargetRules
         {
             try
             {
+                Console.Write("\nCreating Unreal Module Build...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"using UnrealBuildTool;
@@ -116,10 +143,11 @@ public class " + $"{projectName}" + @"Core : ModuleRules
     }
 }");
                 }
+                Output.Succses("OK!");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
         /// <summary>
@@ -131,6 +159,7 @@ public class " + $"{projectName}" + @"Core : ModuleRules
         {
             try
             {
+                Console.Write("\nCreating Unreal Module Header...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"#pragma once
@@ -153,10 +182,11 @@ public:
     virtual void ShutdownModule() override;
 };");
                 }
+                Output.Succses("OK!");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
         /// <summary>
@@ -168,6 +198,7 @@ public:
         {
             try
             {
+                Console.Write("\nCreating Unreal Module .cpp Primary...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"#include " + $"\"{projectName}Core.h\"" + @"
@@ -185,10 +216,12 @@ void F" + $"{projectName}" + @"Core::ShutdownModule()
 
 IMPLEMENT_PRIMARY_GAME_MODULE(F" + $"{projectName}" + @"Core, " + $"{projectName}" + @"Core, " + $"\"{projectName}Core\"" + @"); ");
                 }
+                Output.Succses("OK!");
+
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
 
@@ -201,6 +234,7 @@ IMPLEMENT_PRIMARY_GAME_MODULE(F" + $"{projectName}" + @"Core, " + $"{projectName
         {
             try
             {
+                Console.Write("\nSetting up the Ureal Log library...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"#pragma once
@@ -208,10 +242,12 @@ IMPLEMENT_PRIMARY_GAME_MODULE(F" + $"{projectName}" + @"Core, " + $"{projectName
 
 DECLARE_LOG_CATEGORY_EXTERN(Log" + $"{projectName}" +@"Core, All, All);");
                 }
+                Output.Succses("OK!");
+
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
         /// <summary>
@@ -229,10 +265,11 @@ DECLARE_LOG_CATEGORY_EXTERN(Log" + $"{projectName}" +@"Core, All, All);");
 DEFINE_LOG_CATEGORY(Log" + $"{projectName}" + @"Core);
                     ");
                 }
+
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
         /// <summary>
@@ -244,14 +281,17 @@ DEFINE_LOG_CATEGORY(Log" + $"{projectName}" + @"Core);
         {
             try
             {
+                Console.Write("\nGenerating batch Build file...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"@echo off" + $"\n\"{config.UnrealDir}" + @"\Engine\Build\BatchFiles\Build.bat"" " + $"{projectName}Editor Win64 Development " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" -waitmutex -NoHotReload");
                 }
+                Output.Succses("OK!");
+
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
         /// <summary>
@@ -264,14 +304,17 @@ DEFINE_LOG_CATEGORY(Log" + $"{projectName}" + @"Core);
         {
             try
             {
+                Console.Write("\nGenerating batch Editor file...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
                     sw.WriteLine(@"@echo off" + $"\ncall \"{config.UnrealDir}" + @"\Engine\Binaries\Win64\UE4Editor.exe "" " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" %*");
                 }
+                Output.Succses("OK!");
+
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Output.Error("Exception: " + e.Message);
             }
         }
     }
