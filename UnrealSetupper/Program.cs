@@ -30,6 +30,26 @@ class Program
             string projectName = userArgs.Replace("create", "");
             CreateOutput(projectName);
         }
+        else if (userArgs.StartsWith("open", comparison))
+        {
+            string projectName = userArgs.Replace("open", "");
+
+            DirectoryInfo projectsDir = new DirectoryInfo(@"Projects");
+            FileInfo[] files = projectsDir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                if (projectName == file.Name.Replace($".config.json", ""))
+                {
+                    USettuperProjectConfig? projectConfig = JsonSerializer.Deserialize<USettuperProjectConfig>(File.ReadAllText(@"Projects\" + $"{projectName}.config.json"));
+                    if (projectConfig != null && projectConfig.ProjectDir != null)
+                        System.Diagnostics.Process.Start("explorer.exe", $"{projectConfig.ProjectDir}");
+                    Output.Succses("OK!");
+                    return;
+                }
+            }
+            Output.Error("There is no such project");
+
+        }
         else if (userArgs.StartsWith("build", comparison))
         {
             BatRunOutput(userArgs, "Build");
@@ -91,7 +111,7 @@ class Program
         else
         {
             Output.Error("Wrong Argument!\n");
-            Console.WriteLine("* config - to update the configuration\n* create - creates a new project\n* build - builds a project for the Editor\n* editor - launch editor\n* list - output all projects\n* delete - delete the project configuration file");
+            Console.WriteLine("* config - to update the configuration\n* create - creates a new project\n* build - builds a project for the Editor\n* editor - launch editor\n* list - output all projects\n* delete - delete the project configuration file\n* open - open the project folder in explorer");
         }
     }
 
