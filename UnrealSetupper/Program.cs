@@ -91,7 +91,7 @@ class Program
         else
         {
             Output.Error("Wrong Argument!\n");
-            Console.WriteLine("* config - to update the configuration\n* create - creates a new project\n* build - builds a project for the Editor\n* editor - launch editor\n* list - output all projects");
+            Console.WriteLine("* config - to update the configuration\n* create - creates a new project\n* build - builds a project for the Editor\n* editor - launch editor\n* list - output all projects\n* delete - delete the project configuration file");
         }
     }
 
