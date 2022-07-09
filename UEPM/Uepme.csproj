@@ -11,4 +11,8 @@
 	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include=".githubImg\" />
+  </ItemGroup>
+
 </Project>
