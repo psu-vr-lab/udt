@@ -3,6 +3,7 @@ using System.Text.Json;
 
 class Program
 {
+    public static string appDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\.uepme\";
     private static void Main(string[] args)
     {
         string userArgs = string.Empty;
@@ -14,9 +15,19 @@ class Program
             }
         }
 
-        if (!File.Exists("UnrealSettuper.config.json"))
+        if (!Directory.Exists(appDir))
+        {
+            Directory.CreateDirectory(appDir);
+        }
+
+        if (!File.Exists( appDir + @"UnrealSettuper.config.json"))
         {
             ConfigOutput();
+        }
+
+        if (!Directory.Exists(appDir + "Projects"))
+        {
+            Directory.CreateDirectory(appDir + "Projects");
         }
 
         StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
@@ -34,13 +45,13 @@ class Program
         {
             string projectName = userArgs.Replace("open", "");
 
-            DirectoryInfo projectsDir = new DirectoryInfo(@"Projects");
+            DirectoryInfo projectsDir = new DirectoryInfo(appDir + @"Projects");
             FileInfo[] files = projectsDir.GetFiles();
             foreach (FileInfo file in files)
             {
                 if (projectName == file.Name.Replace($".config.json", ""))
                 {
-                    USettuperProjectConfig? projectConfig = JsonSerializer.Deserialize<USettuperProjectConfig>(File.ReadAllText(@"Projects\" + $"{projectName}.config.json"));
+                    USettuperProjectConfig? projectConfig = JsonSerializer.Deserialize<USettuperProjectConfig>(File.ReadAllText(appDir + @"Projects\" + $"{projectName}.config.json"));
                     if (projectConfig != null && projectConfig.ProjectDir != null)
                         System.Diagnostics.Process.Start("explorer.exe", $"{projectConfig.ProjectDir}");
                     Output.Succses("OK!");
@@ -61,7 +72,7 @@ class Program
         else if (userArgs.StartsWith("list", comparison))
         {
             Console.WriteLine("");
-            DirectoryInfo projectsDir = new DirectoryInfo(@"Projects");
+            DirectoryInfo projectsDir = new DirectoryInfo(appDir + @"Projects");
             FileInfo[] files = projectsDir.GetFiles();
             int i = 0;
             foreach (FileInfo file in files)
@@ -76,7 +87,7 @@ class Program
         {
             string projectName = userArgs.Replace("delete", "");
 
-            DirectoryInfo projectsDir = new DirectoryInfo(@"Projects");
+            DirectoryInfo projectsDir = new DirectoryInfo(appDir + @"Projects");
             FileInfo[] files = projectsDir.GetFiles();
             bool wasFound = false;
             foreach (FileInfo file in files)
@@ -104,7 +115,7 @@ class Program
             }
             if (userChoose.ToLower().StartsWith("y"))
             {
-                File.Delete(@"Projects\" + $"{projectName}.config.json");
+                File.Delete(appDir + @"Projects\" + $"{projectName}.config.json");
                 Output.Succses("The project has been deleted");
             }
         }
@@ -136,7 +147,7 @@ class Program
 
     private static void CreateOutput(string userArgs)
     {
-        USettuperConfig? config = JsonSerializer.Deserialize<USettuperConfig>(File.ReadAllText("UnrealSettuper.config.json"));
+        USettuperConfig? config = JsonSerializer.Deserialize<USettuperConfig>(File.ReadAllText(appDir + "UnrealSettuper.config.json"));
         if (config == null || config.ProjectsDir == null || config.UnrealDir == null)
         {
             Output.Error("Config error!");
@@ -160,11 +171,8 @@ class Program
             ProjectDir = projectDir
         };
 
-        if (!Directory.Exists("Projects"))
-        {
-            Directory.CreateDirectory("Projects");
-        }
-        string fileName = @"Projects\" + $"{userArgs}.config.json";
+        
+        string fileName = appDir + @"Projects\" + $"{userArgs}.config.json";
         string configToJson = JsonSerializer.Serialize(projectConfig);
         File.WriteAllText(fileName, configToJson);
 
@@ -196,13 +204,13 @@ class Program
     {
         Console.WriteLine($"Launching the {batFile} of Project {userArgs.Replace($"{batFile.ToLower()}", "")}");
         string projectName = userArgs.Replace($"{batFile.ToLower()}", "") + ".config.json";
-        DirectoryInfo projectsDir = new DirectoryInfo(@"Projects");
+        DirectoryInfo projectsDir = new DirectoryInfo(appDir + @"Projects");
         FileInfo[] files = projectsDir.GetFiles();
         foreach (FileInfo file in files)
         {
             if (file.Name == projectName)
             {
-                USettuperProjectConfig? projectConfig = JsonSerializer.Deserialize<USettuperProjectConfig>(File.ReadAllText(@"Projects\" + $"{userArgs.Replace($"{batFile.ToLower()}", "")}.config.json"));
+                USettuperProjectConfig? projectConfig = JsonSerializer.Deserialize<USettuperProjectConfig>(File.ReadAllText(appDir + @"Projects\" + $"{userArgs.Replace($"{batFile.ToLower()}", "")}.config.json"));
                 if (projectConfig != null && projectConfig.ProjectDir != null)
                     ExecuteCommand($"{Path.Combine(projectConfig.ProjectDir, batFile) + ".bat"}");
                 Output.Succses("OK!");

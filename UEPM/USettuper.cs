@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Text.Json;
+using System.Reflection;
+
 namespace UnrealSetupper
 {
     internal static class Output
@@ -44,7 +46,7 @@ namespace UnrealSetupper
                 UnrealDir = unrealDir,
                 ProjectsDir = projectsDir
             };
-            string fileName = "UnrealSettuper.config.json";
+            string fileName = Program.appDir + "UnrealSettuper.config.json";
             string configToJson = JsonSerializer.Serialize(config);
             File.WriteAllText(fileName, configToJson);
 
