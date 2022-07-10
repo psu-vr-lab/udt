@@ -73,7 +73,15 @@ class Program
                 {
                     USettuperProjectConfig? projectConfig = JsonSerializer.Deserialize<USettuperProjectConfig>(File.ReadAllText(appDir + @"Projects\" + $"{projectName}.config.json"));
                     if (projectConfig != null && projectConfig.ProjectDir != null)
-                        System.Diagnostics.Process.Start($" {projectConfig.ProjectDir}" + @"\Binaries\Win64\" + $"{projectConfig.Name}.exe");
+                    {
+                        if(!File.Exists($"{projectConfig.ProjectDir}" + @"\Binaries\Win64\" + $"{projectConfig.Name}.exe"))
+                        {
+                            Output.Error("Compile project firts");
+                            return;
+                        }
+
+                        System.Diagnostics.Process.Start($"{projectConfig.ProjectDir}" + @"\Binaries\Win64\" + $"{projectConfig.Name}.exe");
+                    }
                     Output.Succses("OK!");
                     return;
                 }
@@ -207,7 +215,7 @@ class Program
         else
         {
             Output.Error("Wrong Argument!\n");
-            Console.WriteLine("* config - to update the configuration\n* create - creates a new project\n* build - builds a project for the Editor\n* editor - launch editor\n* list - output all projects\n* delete - delete the project configuration file\n* open - open the project folder in explorer");
+            Console.WriteLine("* config - to update the configuration\n* create - creates a new project\n* build - builds a project for the Editor\n* editor - launch editor\n* cook - cook content\n* compile - development build\n* run - start .exe of development build\n* list - output all projects\n* delete - delete the project configuration file\n* open - open the project folder in explorer\n* link - link unreal project with uepme");
         }
     }
 
