@@ -61,15 +61,23 @@ class Program
             Output.Error("There is no such project");
 
         }
-        else if (userArgs.StartsWith("build", comparison))
+        else if (userArgs.StartsWith("Build", comparison))
         {
             BatRunOutput(userArgs, "Build");
         }
-        else if (userArgs.StartsWith("editor", comparison))
+        else if (userArgs.StartsWith("Editor", comparison))
         {
             BatRunOutput(userArgs, "Editor");
         }
-        else if (userArgs.StartsWith("list", comparison))
+        else if (userArgs.StartsWith("Compile", comparison))
+        {
+            BatRunOutput(userArgs, "Compile");
+        }
+        else if (userArgs.StartsWith("Cook", comparison))
+        {
+            BatRunOutput(userArgs, "Cook");
+        }
+        else if (userArgs.StartsWith("List", comparison))
         {
             Console.WriteLine("");
             DirectoryInfo projectsDir = new DirectoryInfo(appDir + @"Projects");
@@ -192,7 +200,10 @@ class Program
         USettuper.ULH(Path.Combine(privateDir, "Log") + ".h", userArgs);
         USettuper.ULC(Path.Combine(privateDir, "Log") + ".cpp", userArgs);
         USettuper.GBB(Path.Combine(projectDir, "Build") + ".bat", userArgs, config);
+        USettuper.GCB(Path.Combine(projectDir, "Compile") + ".bat", userArgs, config);
+        USettuper.GCoB(Path.Combine(projectDir, "Cook") + ".bat", userArgs, config);
         USettuper.GEB(Path.Combine(projectDir, "Editor") + ".bat", userArgs, config);
+
 
         Console.WriteLine($"\nThe first build of the {userArgs} project");
         ExecuteCommand($"{Path.Combine(projectDir, "Build") + ".bat"}");
