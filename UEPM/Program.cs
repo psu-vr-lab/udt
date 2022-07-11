@@ -281,9 +281,11 @@ class Program
         USettuper.UMT(Path.Combine(sourceDir, userArgs) + "Editor.Target.cs", userArgs, "Editor");
         USettuper.UMB(Path.Combine(coreDir, userArgs) + "Core.Build.cs", userArgs);
         USettuper.UMH(Path.Combine(publicDir, userArgs) + "Core.h", userArgs);
+        USettuper.UTH(Path.Combine(publicDir, "ActorTest") + ".h", userArgs);
         USettuper.UMC(Path.Combine(privateDir, userArgs) + "Core.cpp", userArgs);
         USettuper.ULH(Path.Combine(privateDir, "Log") + ".h", userArgs);
         USettuper.ULC(Path.Combine(privateDir, "Log") + ".cpp", userArgs);
+        USettuper.UTC(Path.Combine(privateDir, "ActorTest") + ".cpp", userArgs);
         USettuper.GBB(Path.Combine(projectDir, "Build") + ".bat", userArgs, config);
         USettuper.GCB(Path.Combine(projectDir, "Compile") + ".bat", userArgs, config);
         USettuper.GCoB(Path.Combine(projectDir, "Cook") + ".bat", userArgs, config);

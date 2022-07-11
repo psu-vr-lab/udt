@@ -9,7 +9,7 @@
 	<ToolCommandName>uepme</ToolCommandName>
 	<PackageOutputPath>./nupkg</PackageOutputPath>
 	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-	<Version>1.2.2</Version>
+	<Version>1.4.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

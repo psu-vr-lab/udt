@@ -275,6 +275,73 @@ DEFINE_LOG_CATEGORY(Log" + $"{projectName}" + @"Core);
             }
         }
         /// <summary>
+        /// Unreal Actor Test Header
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="projectName"></param>
+        public static void UTH(string filePath, string projectName)
+        {
+            try
+            {
+                using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
+                {
+                    sw.WriteLine(@"#pragma once
+#include ""CoreMinimal.h""
+#include ""GameFramework/Actor.h""
+#include ""ActorTest.generated.h""
+UCLASS()
+class AActorTest : public AActor
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= ""Components"")
+    class UBillboardComponent* Sprite;
+
+public:
+	AActorTest(const FObjectInitializer& ObjectInitializer);
+	virtual void BeginPlay() override;
+};");
+                }
+            }
+            catch (Exception e)
+            {
+                Output.Error("Exception: " + e.Message);
+            }
+        }
+        /// <summary>
+        /// Unreal Actor Test .cpp file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="projectName"></param>
+        public static void UTC(string filePath, string projectName)
+        {
+            try
+            {
+                using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
+                {
+                    sw.WriteLine(@"#include ""ActorTest.h""
+#include ""Components/SceneComponent.h""
+#include ""Components/BillboardComponent.h""
+#include ""Log.h""
+AActorTest::AActorTest(const FObjectInitializer&ObjectInitializer) : Super(ObjectInitializer)
+{
+    RootComponent = ObjectInitializer.CreateDefaultSubobject<USceneComponent>(this, TEXT(""RootComponent""));
+    Sprite = ObjectInitializer.CreateDefaultSubobject<UBillboardComponent>(this, TEXT(""Sprite""));
+    Sprite->SetupAttachment(RootComponent);
+}
+void AActorTest::BeginPlay(){
+    Super::BeginPlay();
+    UE_LOG(Log" + $"{projectName}" + @"Core, Log, TEXT(""Hello uempe""));
+}");
+                }
+            }
+            catch (Exception e)
+            {
+                Output.Error("Exception: " + e.Message);
+            }
+        }
+        /// <summary>
         /// Generate Build Bat file
         /// </summary>
         /// <param name="filePath"></param>
