@@ -1,17 +1,63 @@
+
 # uepme
-Project Manager for Unreal Engine
 
-https://www.nuget.org/packages/Uepme/
+CLI Unreal Engine Project Manager tool.
 
-`dotnet tool install --global Uepme --version 1.2.2`
+![Nuget](https://img.shields.io/nuget/v/Uepme?color=g&label=nuget&logo=nuget&style=plastic)
 
-With it, you can create projects, launch, view all projects, build them, cook content and create custom bat files for already existing projects for later use with uempe.
+## Features
 
-write `uepme help` for help menu.
-all paths are complete without quotes
+- Project Management without Epic Games Launcher
+- Creating a С++ Unreal project without the participation of Visual Studio IDE
+- Building a project without Visual Studio IDE
+- Creates .bat files for compilation already in the created sln project.
 
-example : `C:\Program Files\Epic Games\UE_4.27`
 
-Currently supported versions of Unreal Engine : 4.27
+## Deployment
 
-to work with earlier versions, you need to change the .project file
+To deploy uepme run
+
+```bash
+  # clone repository
+  git clone https://github.com/jejikeh/Uepme.git
+  
+  # build project
+  dotnet pack
+
+  # install package
+  dotnet tool install --global --add-source ./nupkg uepme
+```
+
+
+## Installation
+
+Install uepme as [nuget package](https://www.nuget.org/packages/Uepme)
+
+```bash
+  dotnet tool install --global Uepme --version 1.2.2
+```
+    
+## Commands
+
+#### Example
+
+```bash
+  # Configure uepme
+  # on fist launch
+  uepme
+  # or later
+  uepme config
+```
+
+| Parameter | Type |
+| :-------- |:------------------------- |
+| `create ExampleName` |  Creates an Unreal c++ project and launches the editor |
+| `build ExampleName` | Build Unreal project  |
+| `editor ExampleName` | Launch editor  |
+| `cook ExampleName` | Cook content of project  |
+| `compile ExampleName` | Build a standalone version of project  |
+| `run ExampleName` | Run .exe standalone file   |
+| `open ExampleName` | Open project folder in the Explorer   |
+| `link C:\Documents\Projects\ExampleProject` | Linking an existing unreal project with uepme |
+| `delete ExampleName` | Delete the uepme project configuration file |
+| `list ExampleName` | Print all uepme projects |
