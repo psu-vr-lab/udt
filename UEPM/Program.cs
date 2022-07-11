@@ -252,6 +252,7 @@ class Program
         string coreDir = Path.Combine(sourceDir, $"{userArgs}Core");
         string privateDir = Path.Combine(coreDir, "Private");
         string publicDir = Path.Combine(coreDir, "Public");
+        string configDir = Path.Combine(projectDir,"Config");
 
         if (Directory.Exists(projectDir))
         {
@@ -276,22 +277,31 @@ class Program
         Directory.CreateDirectory(coreDir);
         Directory.CreateDirectory(privateDir);
         Directory.CreateDirectory(publicDir);
+        Directory.CreateDirectory(configDir);
 
         USettuper.UUPROJ(Path.Combine(projectDir, userArgs) + ".uproject", userArgs);
+        
         USettuper.UMT(Path.Combine(sourceDir, userArgs) + ".Target.cs", userArgs, "Game");
         USettuper.UMT(Path.Combine(sourceDir, userArgs) + "Editor.Target.cs", userArgs, "Editor");
         USettuper.UMB(Path.Combine(coreDir, userArgs) + "Core.Build.cs", userArgs);
+        
+        //USettuper.UGBH(Path.Combine(coreDir, userArgs) + "GameModeBase.h", userArgs);
+        //USettuper.UGBC(Path.Combine(coreDir, userArgs) + "GameModeBase.cpp", userArgs);
+
         USettuper.UMH(Path.Combine(publicDir, userArgs) + "Core.h", userArgs);
         USettuper.UTH(Path.Combine(publicDir, "ActorTest") + ".h", userArgs);
         USettuper.UMC(Path.Combine(privateDir, userArgs) + "Core.cpp", userArgs);
         USettuper.ULH(Path.Combine(privateDir, "Log") + ".h", userArgs);
         USettuper.ULC(Path.Combine(privateDir, "Log") + ".cpp", userArgs);
         USettuper.UTC(Path.Combine(privateDir, "ActorTest") + ".cpp", userArgs);
+        
         USettuper.GBB(Path.Combine(projectDir, "Build") + ".bat", userArgs, config);
         USettuper.GCB(Path.Combine(projectDir, "Compile") + ".bat", userArgs, config);
         USettuper.GCoB(Path.Combine(projectDir, "Cook") + ".bat", userArgs, config);
         USettuper.GEB(Path.Combine(projectDir, "Editor") + ".bat", userArgs, config);
 
+
+        USettuper.UDEI(Path.Combine(configDir, "DefaultEngine") + ".ini", userArgs);
 
         Console.WriteLine($"\nThe first build of the {userArgs} project");
         ExecuteCommand($"{Path.Combine(projectDir, "Build") + ".bat"}");
