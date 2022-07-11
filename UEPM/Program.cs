@@ -19,16 +19,17 @@ class Program
         {
             Directory.CreateDirectory(appDir);
         }
-
-        if (!File.Exists( appDir + @"UnrealSettuper.config.json"))
-        {
-            ConfigOutput();
-        }
-
         if (!Directory.Exists(appDir + "Projects"))
         {
             Directory.CreateDirectory(appDir + "Projects");
         }
+
+        if (!File.Exists( appDir + @"UnrealSettuper.config.json"))
+        {
+            ConfigOutput();
+            return;
+        }
+
 
         StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
 
