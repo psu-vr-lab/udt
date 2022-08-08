@@ -9,7 +9,7 @@
 	<ToolCommandName>uepme</ToolCommandName>
 	<PackageOutputPath>./nupkg</PackageOutputPath>
 	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-	<Version>2.0.9</Version>
+	<Version>2.9.0</Version>
 	<Description>CLI Project Manager for Unreal Engine</Description>
 	<Authors>Jejikeh</Authors>
 	<RepositoryUrl>"https://github.com/jejikeh/Uepme"</RepositoryUrl>

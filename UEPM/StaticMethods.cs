@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -44,5 +45,21 @@ internal class StaticMethods
             }
         }
         Output.Error("There is no such project");
+    }
+
+    internal static string RunTerminalCommand(string programName, string args)
+    {
+        Process p = new Process();
+        // Redirect the output stream of the child process.
+        p.StartInfo.UseShellExecute = false;
+        p.StartInfo.RedirectStandardOutput = true;
+        p.StartInfo.FileName = "cmd.exe";
+        p.StartInfo.Arguments = $"/C {programName} {args}";
+        p.Start();
+        // Read the output stream first and then wait.
+        string output = p.StandardOutput.ReadToEnd();
+        p.WaitForExit();
+
+        return output;
     }
 }

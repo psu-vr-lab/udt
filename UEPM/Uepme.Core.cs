@@ -17,7 +17,7 @@ internal abstract class BaseVerb
     internal abstract void Run();
 }
 
-[Verb("config", HelpText = "Update the configuration")]
+[Verb("config", HelpText = "Update the configuration.")]
 internal class Config : BaseVerb
 {
     internal override void Run()
@@ -42,11 +42,14 @@ internal class Config : BaseVerb
 }
 
 
-[Verb("new", HelpText = "Creates an Unreal c++ project and launches the editor")]
+[Verb("new", HelpText = "Creates an Unreal c++ project and launches the editor.")]
 internal class New : BaseVerb
 {
-    [Option('n', "name", Required = true, HelpText = "Project name")]
+    [Option('n', "name", Required = true, HelpText = "Project name.")]
     public string? Name { get; set; }
+
+    [Option('c', "config", Required = false, HelpText = "Use the configuration file.")]
+    public bool UseConfig { get; set; }
     internal override void Run()
     {
         USettuperConfig? config = JsonSerializer.Deserialize<USettuperConfig>(File.ReadAllText(appDir + "UnrealSettuper.config.json"));
@@ -55,7 +58,7 @@ internal class New : BaseVerb
             Output.Error("Config error!");
             return;
         }
-        string projectDir = Path.Combine(config.ProjectsDir, Name!);
+        string projectDir = Path.Combine(UseConfig ? config.ProjectsDir : "", Name!);
         string sourceDir = Path.Combine(projectDir, "Source");
         string coreDir = Path.Combine(sourceDir, $"{Name}Core");
         string privateDir = Path.Combine(coreDir, "Private");
@@ -71,7 +74,7 @@ internal class New : BaseVerb
         USettuperProjectConfig projectConfig = new USettuperProjectConfig
         {
             Name = Name,
-            ProjectDir = projectDir
+            ProjectDir = UseConfig ? projectDir : Path.GetFullPath(projectDir),
         };
 
 
@@ -103,10 +106,10 @@ internal class New : BaseVerb
         USettuper.ULC(Path.Combine(privateDir, "Log") + ".cpp", Name!);
         USettuper.UTC(Path.Combine(privateDir, "ActorTest") + ".cpp", Name!);
 
-        USettuper.GBB(Path.Combine(projectDir, "Build") + ".bat", Name!, config);
-        USettuper.GCB(Path.Combine(projectDir, "Compile") + ".bat", Name!, config);
-        USettuper.GCoB(Path.Combine(projectDir, "Cook") + ".bat", Name!, config);
-        USettuper.GEB(Path.Combine(projectDir, "Editor") + ".bat", Name!, config);
+        USettuper.GBB(Path.Combine(projectDir, "Build") + ".bat", config, projectConfig);
+        USettuper.GCB(Path.Combine(projectDir, "Compile") + ".bat", config, projectConfig);
+        USettuper.GCoB(Path.Combine(projectDir, "Cook") + ".bat",config, projectConfig);
+        USettuper.GEB(Path.Combine(projectDir, "Editor") + ".bat", config, projectConfig);
 
 
         USettuper.UDEI(Path.Combine(configDir, "DefaultEngine") + ".ini", Name!);
@@ -118,13 +121,19 @@ internal class New : BaseVerb
     }
 }
 
-[Verb("open", HelpText = "Open project folder in the Explorer")]
+[Verb("open", HelpText = "Open project folder in the Explorer.")]
 internal class Open : BaseVerb
 {
-    [Option('n', "name", Required = true, HelpText = "Project name")]
+    [Option('n', "name", Required = false, HelpText = "Project name. It is not necessary if the shell is already in the desired folder.")]
     public string? Name { get; set; }
+
     internal override void Run()
     {
+        if (Name is null)
+        {
+            System.Diagnostics.Process.Start("explorer.exe", $".");
+            return;
+        }
 
         DirectoryInfo projectsDir = new DirectoryInfo(appDir + @"Projects");
         FileInfo[] files = projectsDir.GetFiles();
@@ -139,18 +148,35 @@ internal class Open : BaseVerb
                 return;
             }
         }
-        Output.Error("There is no such project");
+        Output.Error($"There is no such project {Name}");
     }
 
 }
 
-[Verb("run", HelpText = "Run .exe standalone file")]
+[Verb("run", HelpText = "Run .exe standalone file.")]
 internal class RunVerb : BaseVerb
 {
-    [Option('n', "name", Required = true, HelpText = "Project name")]
+    [Option('n', "name", Required = false, HelpText = "Project name. It is not necessary if the shell is already in the desired folder.")]
+
     public string? Name { get; set; }
     internal override void Run()
     {
+        if (Name is null)
+        {
+            var projectDir = new DirectoryInfo(Directory.GetCurrentDirectory());
+            if(Directory.Exists(projectDir.FullName + @"\Binaries\Win64\"))
+            {
+                if (!File.Exists($"{projectDir.FullName}" + @"\Binaries\Win64\" + $"{projectDir.Name}.exe"))
+                {
+                    Output.Error("Compile the project first!");
+                    return;
+                }
+                System.Diagnostics.Process.Start(projectDir.FullName + @"\Binaries\Win64\" + $"{projectDir.Name}.exe");
+            }
+            Output.Error("There is no project here.");
+            return;
+        }
+
         DirectoryInfo projectsDir = new DirectoryInfo(appDir + @"Projects");
         FileInfo[] files = projectsDir.GetFiles();
         foreach (FileInfo file in files)
@@ -162,7 +188,7 @@ internal class RunVerb : BaseVerb
                 {
                     if (!File.Exists($"{projectConfig.ProjectDir}" + @"\Binaries\Win64\" + $"{projectConfig.Name}.exe"))
                     {
-                        Output.Error("Compile project firts");
+                        Output.Error("Compile the project first");
                         return;
                     }
 
@@ -172,62 +198,76 @@ internal class RunVerb : BaseVerb
                 return;
             }
         }
-        Output.Error("There is no such project");
+        Output.Error("There is no such project.");
     }
 }
 
 
-[Verb("build", HelpText = "Build Unreal project")]
-internal class Build : BaseVerb
+// TODO: Create a separate abstract class for verbs using .bat files
+internal abstract class VerbBat : BaseVerb
 {
-    [Option('n', "name", Required = true, HelpText = "Project name")]
+    [Option('n', "name", Required = false, HelpText = "Project name. It is not necessary if the shell is already in the desired folder.")]
     public string? Name { get; set; }
+
     internal override void Run()
     {
-        StaticMethods.BatRunOutput(appDir, Name!, "Build");
+        if (Name is null)
+        {
+            var projectDir = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+            if (File.Exists($"{projectDir.FullName}" + @"\" + $"{GetType()}.bat"))
+            {
+                StaticMethods.ExecuteCommand($"{projectDir.FullName}" + @"\" + $"{GetType()}.bat");
+                Output.Succses("OK!");
+                return;
+            }
+
+            Output.Error("There is no project here.");
+            return;
+        }
+
+        StaticMethods.BatRunOutput(appDir, Name!, $"{GetType()}");
     }
+
 }
 
-[Verb("editor", HelpText = "Launch editor")]
-internal class Editor : BaseVerb
+
+[Verb("build", HelpText = "Build Unreal project.")]
+internal class Build : VerbBat
 {
-    [Option('n', "name", Required = true, HelpText = "Set the package name.")]
-    public string? Name { get; set; }
-    internal override void Run()
-    {
-        StaticMethods.BatRunOutput(appDir, Name!, "Editor");
-    }
+
 }
 
-[Verb("compile", HelpText = "Build a standalone version of project")]
-internal class Compile : BaseVerb
+[Verb("editor", HelpText = "Launch editor.")]
+internal class Editor : VerbBat
 {
-    [Option('n', "name", Required = true, HelpText = "Project name")]
-    public string? Name { get; set; }
-    internal override void Run()
-    {
-        StaticMethods.BatRunOutput(appDir, Name!, "Compile");
-    }
+
 }
 
-[Verb("cook", HelpText = "Cook content of project")]
-internal class Cook : BaseVerb
+[Verb("compile", HelpText = "Build a standalone version of project.")]
+internal class Compile : VerbBat
 {
-    [Option('n', "name", Required = true, HelpText = "Project name")]
-    public string? Name { get; set; }
-    internal override void Run()
-    {
-        StaticMethods.BatRunOutput(appDir, Name!, "Cook");
-    }
 }
 
-[Verb("link", HelpText = "Linking an existing unreal project with uepme")]
+[Verb("cook", HelpText = "Cook content of project.")]
+internal class Cook : VerbBat
+{
+
+}
+
+[Verb("link", HelpText = "Linking an existing unreal project with uepme.")]
 internal class Link : BaseVerb
 {
-    [Option('p', "path", Required = true, HelpText = "Full path to the project")]
+    [Option('p', "path", Required = false, HelpText = "Full path to the project.")]
     public string? ProjectPath { get; set; }
     internal override void Run()
     {
+        if (ProjectPath is null)
+        {
+            var projectDir = new DirectoryInfo(Directory.GetCurrentDirectory());
+            ProjectPath = projectDir.FullName;
+        }
+
         USettuperConfig? config = JsonSerializer.Deserialize<USettuperConfig>(File.ReadAllText(appDir + "UnrealSettuper.config.json"));
         if (config == null || config.ProjectsDir == null || config.UnrealDir == null)
         {
@@ -269,10 +309,10 @@ internal class Link : BaseVerb
         if (!wasFoundProjectBat)
         {
             Console.WriteLine("Start generating uepme build files");
-            USettuper.GBB(Path.Combine(ProjectPath!, "Build") + ".bat", unrealProjectName, config);
-            USettuper.GCB(Path.Combine(ProjectPath!, "Compile") + ".bat", unrealProjectName, config);
-            USettuper.GCoB(Path.Combine(ProjectPath!, "Cook") + ".bat", unrealProjectName, config);
-            USettuper.GEB(Path.Combine(ProjectPath!, "Editor") + ".bat", unrealProjectName, config);
+            USettuper.GBB(Path.Combine(ProjectPath!, "Build") + ".bat", config, projectConfig);
+            USettuper.GCB(Path.Combine(ProjectPath!, "Compile") + ".bat", config, projectConfig);
+            USettuper.GCoB(Path.Combine(ProjectPath!, "Cook") + ".bat", config, projectConfig);
+            USettuper.GEB(Path.Combine(ProjectPath!, "Editor") + ".bat", config, projectConfig);
         }
 
         string fileName = appDir + @"Projects\" + $"{unrealProjectName}.config.json";
@@ -282,7 +322,7 @@ internal class Link : BaseVerb
     }
 }
 
-[Verb("list", HelpText = "Print all uepme projects")]
+[Verb("list", HelpText = "Print all uepme projects.")]
 internal class List : BaseVerb
 {
     internal override void Run()

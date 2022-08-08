@@ -557,14 +557,14 @@ VisualizeCalibrationGrayscaleMaterialPath=/Engine/EngineMaterials/PPM_DefaultCal
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="projectName"></param>
-        public static void GBB(string filePath, string projectName, USettuperConfig config)
+        public static void GBB(string filePath, USettuperConfig config, USettuperProjectConfig projectConfig)
         {
             try
             {
                 Console.Write("\nGenerating batch Build file...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
-                    sw.WriteLine(@"@echo off" + $"\n\"{config.UnrealDir}" + @"\Engine\Build\BatchFiles\Build.bat"" " + $"{projectName}Editor Win64 Development " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" -waitmutex -NoHotReload");
+                    sw.WriteLine(@"@echo off" + $"\n\"{config.UnrealDir}" + @"\Engine\Build\BatchFiles\Build.bat"" " + $"{projectConfig.Name}Editor Win64 Development " + $"\"{projectConfig.ProjectDir}" + @"\" + $"{projectConfig.Name}.uproject\" -waitmutex -NoHotReload");
                 }
                 Output.Succses("OK!");
 
@@ -580,14 +580,14 @@ VisualizeCalibrationGrayscaleMaterialPath=/Engine/EngineMaterials/PPM_DefaultCal
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="projectName"></param>
-        public static void GCB(string filePath, string projectName, USettuperConfig config)
+        public static void GCB(string filePath, USettuperConfig config, USettuperProjectConfig projectConfig)
         {
             try
             {
                 Console.Write("\nGenerating batch Compile file...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
-                    sw.WriteLine(@"@echo off" + $"\n\"{config.UnrealDir}" + @"\Engine\Build\BatchFiles\Build.bat"" " + $"{projectName} Win64 Development " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" -waitmutex -NoHotReload");
+                    sw.WriteLine(@"@echo off" + $"\n\"{config.UnrealDir}" + @"\Engine\Build\BatchFiles\Build.bat"" " + $"{projectConfig.Name} Win64 Development " + $"\"{projectConfig.ProjectDir}" + @"\" + $"{projectConfig.Name}.uproject\" -waitmutex -NoHotReload");
                 }
                 Output.Succses("OK!");
 
@@ -604,14 +604,14 @@ VisualizeCalibrationGrayscaleMaterialPath=/Engine/EngineMaterials/PPM_DefaultCal
         /// <param name="filePath"></param>
         /// <param name="projectName"></param>
         /// <param name="config"></param>
-        public static void GEB(string filePath, string projectName, USettuperConfig config)
+        public static void GEB(string filePath,USettuperConfig config, USettuperProjectConfig projectConfig)
         {
             try
             {
                 Console.Write("\nGenerating batch Editor file...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
-                    sw.WriteLine(@"@echo off" + $"\ncall \"{config.UnrealDir}" + @"\Engine\Binaries\Win64\UE4Editor.exe "" " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" %*");
+                    sw.WriteLine(@"@echo off" + $"\ncall \"{config.UnrealDir}" + @"\Engine\Binaries\Win64\UE4Editor.exe "" " + $"\"{projectConfig.ProjectDir}" + @"\" + $"{projectConfig.Name}.uproject\" %*");
                 }
                 Output.Succses("OK!");
 
@@ -627,14 +627,14 @@ VisualizeCalibrationGrayscaleMaterialPath=/Engine/EngineMaterials/PPM_DefaultCal
         /// <param name="filePath"></param>
         /// <param name="projectName"></param>
         /// <param name="config"></param>
-        public static void GCoB(string filePath, string projectName, USettuperConfig config)
+        public static void GCoB(string filePath, USettuperConfig config, USettuperProjectConfig projectConfig)
         {
             try
             {
                 Console.Write("\nGenerating batch Cook file...");
                 using (StreamWriter sw = File.CreateText(Path.Combine(filePath)))
                 {
-                    sw.WriteLine(@"@echo off" + $"\ncall \"{config.UnrealDir}" + @"\Engine\Binaries\Win64\UE4Editor-cmd.exe "" " + $"\"{config.ProjectsDir}" + @"\" + $"{projectName}" + @"\" + $"{projectName}.uproject\" -run=cook -targetplatform=WindowsNoEditor");
+                    sw.WriteLine(@"@echo off" + $"\ncall \"{config.UnrealDir}" + @"\Engine\Binaries\Win64\UE4Editor-cmd.exe "" " + $"\"{projectConfig.ProjectDir}" + @"\" + $"{projectConfig.Name}.uproject\" -run=cook -targetplatform=WindowsNoEditor");
                 }
                 Output.Succses("OK!");
 

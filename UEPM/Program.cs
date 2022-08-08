@@ -5,6 +5,7 @@ using System.Reflection;
 using Console = Colorful.Console;
 using Colorful;
 using CommandLine.Text;
+using System.Net;
 
 class Program
 {
@@ -19,6 +20,14 @@ class Program
         if (!Directory.Exists(appDir + "Projects"))
         {
             Directory.CreateDirectory(appDir + "Projects");
+        }if (!Directory.Exists(appDir + "font"))
+        {
+            Directory.CreateDirectory(appDir + "font");
+            // download font
+            using (var client = new WebClient())
+            {
+                client.DownloadFile("http://www.figlet.org/fonts/larry3d.flf", $"{appDir}/font/larry3d.flf");
+            }
         }
 
         if (!File.Exists( appDir + @"UnrealSettuper.config.json"))
@@ -45,7 +54,7 @@ class Program
 
     static int DisplayHelp(ParserResult<object> parserResult)
     {
-        FigletFont font = FigletFont.Load("font/larry3d.flf");
+        FigletFont font = FigletFont.Load($"{appDir}/font/larry3d.flf");
         Figlet figlet = new Figlet(font);
         Console.WriteLine(figlet.ToAscii("uepme"));
         var versionString = Assembly.GetEntryAssembly()?
