@@ -53,26 +53,47 @@ To deploy uepme run
 #### Example
 
 ```bash
-  # Configure uepme
+  # configure uepme
   # on fist launch
   uepme
   # or later
   uepme config
-  uepme new --name ExampleUepmeProject
+  # creating a project using the path specified in the config
+  uepme new -c --name ExampleUepmeProject
+  uepme build --name ExampleUepmeProject
+  uepme editor -n ExampleUepmeProject
+  # creating a project using an open folder in the terminal
+
+  # create new project and build it
+  uepme new -n -b ExampleUepmeProject
+  cd ExampleUepmeProject
+  # launch the editor
+  uepme editor
 ```
 
-| Parameter                                      | Type                                                  |
-| :--------------------------------------------- | :---------------------------------------------------- |
-| `new -n ExampleName`                           | Creates an Unreal c++ project and launches the editor |
-| `build -n ExampleName`                         | Build Unreal project                                  |
-| `editor -n ExampleName`                        | Launch editor                                         |
-| `cook -n ExampleName`                          | Cook content of project                               |
-| `compile -n ExampleName`                       | Build a standalone version of project                 |
-| `run -n ExampleName`                           | Run .exe standalone file                              |
-| `open -n ExampleName`                          | Open project folder in the Explorer                   |
-| `link -p C:\Documents\Projects\ExampleProject` | Linking an existing unreal project with uepme         |
-| `delete -n ExampleName`                        | Delete the uepme project configuration file           |
-| `list ExampleName`                             | Print all uepme projects                              |
+## Help
+
+View documentation for any command type in the terminal :
+
+```bash
+# specific command
+uepme %command% --help
+# global
+uepme help
+```
+
+| Verbs                                              | Type                                                  |
+| :------------------------------------------------- | :---------------------------------------------------- |
+| `new (--name, --config, --build) ExampleName`      | Creates an Unreal c++ project and launches the editor |
+| `build (-n, ) ExampleName`                         | Build Unreal project                                  |
+| `editor (-n, ) ExampleName`                        | Launch editor                                         |
+| `cook (-n, ) ExampleName`                          | Cook content of project                               |
+| `compile (-n, ) ExampleName`                       | Build a standalone version of project                 |
+| `run (-n, ) ExampleName`                           | Run .exe standalone file                              |
+| `open (-n, ) ExampleName`                          | Open project folder in the Explorer                   |
+| `link (-p, ) C:\Documents\Projects\ExampleProject` | Linking an existing unreal project with uepme         |
+| `delete -n ExampleName`                            | Delete the uepme project configuration file           |
+| `list ExampleName`                                 | Print all uepme projects                              |
 
 ### font
 
