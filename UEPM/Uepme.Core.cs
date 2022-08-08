@@ -50,6 +50,10 @@ internal class New : BaseVerb
 
     [Option('c', "config", Required = false, HelpText = "Use the configuration file.")]
     public bool UseConfig { get; set; }
+
+    [Option('b', "build", Required = false, HelpText = "Building a project after its creation.")]
+    public bool AutoBuild { get; set; }
+
     internal override void Run()
     {
         USettuperConfig? config = JsonSerializer.Deserialize<USettuperConfig>(File.ReadAllText(appDir + "UnrealSettuper.config.json"));
@@ -114,10 +118,11 @@ internal class New : BaseVerb
 
         USettuper.UDEI(Path.Combine(configDir, "DefaultEngine") + ".ini", Name!);
 
-        Console.WriteLine($"\nThe first build of the {Name!} project");
-        StaticMethods.ExecuteCommand($"{Path.Combine(projectDir, "Build") + ".bat"}");
-        Console.WriteLine($"Exec Editor");
-        System.Diagnostics.Process.Start($"{Path.Combine(projectDir, "Editor") + ".bat"}");
+        if (AutoBuild)
+        {
+            Console.WriteLine($"\nThe first build of the {Name!} project");
+            StaticMethods.ExecuteCommand($"{Path.Combine(projectDir, "Build") + ".bat"}");
+        }
     }
 }
 
