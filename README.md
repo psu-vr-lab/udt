@@ -1,5 +1,15 @@
 # uepme
 
+```
+ __  __     __    _____     ___ ___       __
+/\ \/\ \  /'__`\ /\ '__`\ /' __` __`\   /'__`\
+\ \ \_\ \/\  __/ \ \ \L\ \/\ \/\ \/\ \ /\  __/
+ \ \____/\ \____\ \ \ ,__/\ \_\ \_\ \_\\ \____\
+  \/___/  \/____/  \ \ \/  \/_/\/_/\/_/ \/____/
+                    \ \_\
+                     \/_/
+```
+
 CLI Unreal Engine Project Manager tool.
 
 ![Nuget](https://img.shields.io/nuget/v/Uepme?color=g&label=nuget&logo=nuget&style=plastic)
@@ -30,11 +40,13 @@ To deploy uepme run
 
 ## Installation
 
-Install uepme as [nuget package](https://www.nuget.org/packages/Uepme)
+1. Install uepme as [nuget package](https://www.nuget.org/packages/Uepme)
 
 ```bash
   dotnet tool install --global Uepme --version 2.0.9
 ```
+
+2. Download the zip archive from the releases tab and add the uepme folder to the PATH
 
 ## Commands
 
