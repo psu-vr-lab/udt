@@ -73,3 +73,7 @@ To deploy uepme run
 | `link -p C:\Documents\Projects\ExampleProject` | Linking an existing unreal project with uepme         |
 | `delete -n ExampleName`                        | Delete the uepme project configuration file           |
 | `list ExampleName`                             | Print all uepme projects                              |
+
+### font
+
+for ascii art is used figlet font [larry3d](http://www.figlet.org/fontdb_example.cgi?font=larry3d.flf)
