@@ -43,7 +43,7 @@ To deploy uepme run
 1. Install uepme as [nuget package](https://www.nuget.org/packages/Uepme)
 
 ```bash
-  dotnet tool install --global Uepme --version 2.0.9
+  dotnet tool install --global Uepme --version 2.9.9
 ```
 
 2. Download the zip archive from the releases tab and add the uepme folder to the PATH
