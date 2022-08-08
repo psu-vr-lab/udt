@@ -23,6 +23,9 @@ CLI Unreal Engine Project Manager tool.
 
 ### !!! YOU NEED THE VISUAL STUDIO C++ PACKAGE FOR UNREAL, .NET 6 SDK AND WINDOWS SDK TO CREATE AN UNREAL C++ PROJECT
 
+## Project structure
+The project is created following the example from [this tutorial](https://youtu.be/94FvzO1HVzY).
+
 ## Deployment
 
 To deploy uepme run
