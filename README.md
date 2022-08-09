@@ -21,7 +21,7 @@ CLI Unreal Engine Project Manager tool.
 - Building a project without Visual Studio IDE
 - Creates .bat files for compilation already in the created sln project.
 
-### !!! YOU NEED THE VISUAL STUDIO C++ PACKAGE FOR UNREAL, .NET 6 SDK AND WINDOWS SDK TO CREATE AN UNREAL C++ PROJECT
+### !!! YOU NEED THE VISUAL STUDIO C++ PACKAGE FOR UNREAL, WINDOWS SDK TO CREATE AN UNREAL C++ PROJECT
 
 ## Project structure
 The project is created following the example from [this tutorial](https://youtu.be/94FvzO1HVzY).
