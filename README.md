@@ -96,7 +96,7 @@ uepme help
 | `open (-n, ) ExampleName`                          | Open project folder in the Explorer                   |
 | `link (-p, ) C:\Documents\Projects\ExampleProject` | Linking an existing unreal project with uepme         |
 | `delete -n ExampleName`                            | Delete the uepme project configuration file           |
-| `list ExampleName`                                 | Print all uepme projects                              |
+| `list`                                 | Print all uepme projects                              |
 
 ### font
 
