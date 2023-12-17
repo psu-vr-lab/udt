@@ -1,16 +1,6 @@
-# uepme
+# ueco
 
-```
- __  __     __    _____     ___ ___       __
-/\ \/\ \  /'__`\ /\ '__`\ /' __` __`\   /'__`\
-\ \ \_\ \/\  __/ \ \ \L\ \/\ \/\ \/\ \ /\  __/
- \ \____/\ \____\ \ \ ,__/\ \_\ \_\ \_\\ \____\
-  \/___/  \/____/  \ \ \/  \/_/\/_/\/_/ \/____/
-                    \ \_\
-                     \/_/
-```
-
-CLI Unreal Engine Project Manager tool.
+Unreal Engine project command runner.
 
 ![Nuget](https://img.shields.io/nuget/v/Uepme?color=g&label=nuget&logo=nuget&style=plastic)
 
@@ -20,9 +10,6 @@ CLI Unreal Engine Project Manager tool.
 - Creating a С++ Unreal project without the participation of Visual Studio IDE
 - Building a project without Visual Studio IDE
 - Creates .bat files for compilation already in the created sln project.
-
-### !!! YOU NEED THE VISUAL STUDIO C++ PACKAGE FOR UNREAL, WINDOWS SDK TO CREATE AN UNREAL C++ PROJECT
-
 ## Project structure
 The project is created following the example from [this tutorial](https://youtu.be/94FvzO1HVzY).
 
