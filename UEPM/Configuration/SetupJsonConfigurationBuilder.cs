@@ -27,12 +27,18 @@ public static class SetupJsonConfigurationBuilder
         }
 
         foreach (var commandDirectory in Directory.GetDirectories(commandsFolder))
-        foreach (var commandFile in Directory.GetFiles(commandDirectory))
-            if (commandFile.EndsWith(".json"))
+        {
+            foreach (var commandFile in Directory.GetFiles(commandDirectory))
             {
+                if (commandFile.StartsWith("command.") && !commandFile.EndsWith(".json"))
+                {
+                    continue;
+                }
+
                 Console.WriteLine(commandFile);
                 builder.AddJsonFile(commandFile);
             }
+        }
 
         return builder;
     }

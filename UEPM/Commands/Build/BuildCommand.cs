@@ -2,11 +2,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace Ueco.Commands.Build;
 
-public class BuildCommand(IConfiguration configuration)
+public static class BuildCommand
 {
-    public void Execute(FileInfo fileInfo)
+    public static Task ExecuteAsync(FileInfo fileInfo, IConfiguration configuration)
     {
-        Console.WriteLine($"Hello World!, {configuration["Build:Name"]}");
-        Console.WriteLine($"Hello World!, {fileInfo.Name}");
+        var uprojectFile = fileInfo;
+        
+        if (fileInfo.Extension != ".uproject" && fileInfo.Directory is not null)
+        {
+            uprojectFile = fileInfo.Directory.GetFiles("*.uproject", SearchOption.TopDirectoryOnly).FirstOrDefault();
+        }
+        
+        Console.WriteLine($"File: {uprojectFile?.FullName}");
+        
+        return Task.CompletedTask;
     }
 }

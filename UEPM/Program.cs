@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ueco.Commands;
@@ -12,8 +13,11 @@ public static class  Program
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddJsonCommandSettings();
-        serviceCollection.AddCommands();
+
+        var configuration = serviceCollection.BuildServiceProvider().GetService<IConfiguration>();
+        Debug.Assert(configuration is not null, "configuration is null");
         
-        return await serviceCollection.BuildServiceProvider().GetService<RootCommand>().InvokeAsync(args);
+        var rootCommand = ConfigureRootCommand.AddRootCommand(configuration);
+        return await rootCommand.InvokeAsync(args);
     }
 }
