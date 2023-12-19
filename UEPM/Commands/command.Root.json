@@ -1,7 +1,0 @@
-{
-    "Root": {
-        "Name": "ueco",
-        "Description": "Unreal Engine Command Line Interface",
-        "Commands": ["Build"]
-    }
-}

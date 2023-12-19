@@ -1,6 +1,0 @@
-{
-    "Build": {
-        "Name": "build",
-        "Description": "Builds the project"
-    }
-}
