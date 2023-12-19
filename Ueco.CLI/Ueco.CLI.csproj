@@ -23,6 +23,7 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.23407.1" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.23407.1" />
     <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.23407.1" />
+    <PackageReference Include="System.CommandLine.Rendering" Version="0.4.0-alpha.23407.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.Development.json">

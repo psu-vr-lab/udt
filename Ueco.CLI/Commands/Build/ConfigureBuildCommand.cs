@@ -18,14 +18,14 @@ public static class ConfigureBuildCommand
             }
         };
         
-        buildCommand.Action = CommandHandler.Create<FileInfo, IHost>(((file, host) =>
+        buildCommand.Action = CommandHandler.Create<FileInfo, IHost>((file, host) =>
         {
             var serviceProvider = host.Services;
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("BuildCommand");
             
             BuildCommand.Execute(file, logger);
-        }));
+        });
         
         rootCommand.Add(buildCommand);
     }

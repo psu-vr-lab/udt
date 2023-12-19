@@ -1,6 +1,7 @@
 using System.CommandLine;
 using Microsoft.Extensions.Configuration;
 using Ueco.Commands.Build;
+using Ueco.Commands.Engine;
 
 namespace Ueco.Commands;
 
@@ -18,6 +19,7 @@ public static class ConfigureRootCommand
         };
 
         rootCommand.AddBuildCommand();
+        rootCommand.AddEngineCommand();
         
         return rootCommand;
     }

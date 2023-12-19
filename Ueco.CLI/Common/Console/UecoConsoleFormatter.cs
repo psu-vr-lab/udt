@@ -9,8 +9,6 @@ public class UecoConsoleFormatter : ConsoleFormatter, IDisposable
 {
     private readonly IDisposable? _optionsReloadToken;
     private UecoConsoleFormatterOptions _formatterOptions;
-    private readonly ConsoleColor _defaultColor = System.Console.ForegroundColor;
-
     
     public UecoConsoleFormatter(IOptionsMonitor<UecoConsoleFormatterOptions> optionsMonitor) : base("ueco")
     {
@@ -23,7 +21,7 @@ public class UecoConsoleFormatter : ConsoleFormatter, IDisposable
         IExternalScopeProvider? scopeProvider,
         TextWriter textWriter)
     {
-        System.Console.ForegroundColor = _defaultColor;
+        System.Console.ResetColor();
         
         var message = logEntry.Formatter?.Invoke(logEntry.State, logEntry.Exception);
         if (message is null)
