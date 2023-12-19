@@ -3,7 +3,6 @@ using System.CommandLine.NamingConventionBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Ueco.Common;
 
 namespace Ueco.Commands.Build;
 
@@ -22,7 +21,6 @@ public static class ConfigureBuildCommand
         buildCommand.Action = CommandHandler.Create<FileInfo, IHost>(((file, host) =>
         {
             var serviceProvider = host.Services;
-            var greeter = serviceProvider.GetRequiredService<IGreeter>();
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("BuildCommand");
             
