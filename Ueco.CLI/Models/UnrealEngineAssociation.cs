@@ -5,18 +5,18 @@ namespace Ueco.Models;
 /// This information is used by ueco to select correct Engine for a project
 /// All EngineAssociations are stored in the config file "ueco.config.json" 
 /// </summary>
-public class EngineAssociation
+public class UnrealEngineAssociation
 {
     /// <summary>
     /// Name of the Engine. For example, "ueco-engine"
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
     /// <summary>
     /// Path to the Engine folder. For example, "C:\Program Files\Unreal Engine\4.27\"
     /// The folder should contain "Engine"
     /// </summary>
-    public string Path { get; set; }
+    public required string Path { get; set; }
     
     /// <summary>
     /// Version of the Engine

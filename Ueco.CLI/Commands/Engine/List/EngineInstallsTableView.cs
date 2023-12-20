@@ -9,17 +9,16 @@ public sealed class EngineInstallsTableView : StackLayoutView
 {
     private TextSpanFormatter _formatter { get; } = new TextSpanFormatter();
 
-    public EngineInstallsTableView(IEnumerable<EngineAssociation> engineAssociations)
+    public EngineInstallsTableView(IEnumerable<UnrealEngineAssociation> engineAssociations)
     {
-        var arrayEngineAssociations = engineAssociations as EngineAssociation[] ?? engineAssociations.ToArray();
+        var arrayEngineAssociations = engineAssociations as UnrealEngineAssociation[] ?? engineAssociations.ToArray();
         
         Console.ResetColor();
         
-        Add(new ContentView("Installs: \n"));
         Add(new ContentView(Span($"Engines installed: {arrayEngineAssociations.Count()}")));
         Add(new ContentView("\n"));
 
-        var tableView = new TableView<EngineAssociation>();
+        var tableView = new TableView<UnrealEngineAssociation>();
 
         tableView.Items = arrayEngineAssociations;
         

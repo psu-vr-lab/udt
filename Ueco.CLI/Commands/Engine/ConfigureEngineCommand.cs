@@ -3,6 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ueco.Commands.Engine.Add;
 using Ueco.Commands.Engine.List;
 
 namespace Ueco.Commands.Engine;
@@ -14,6 +15,7 @@ public static class ConfigureEngineCommand
         var engineCommand = new CliCommand("engine", "Configure Unreal Engine installations");
         
         engineCommand.AddListCommand();
+        engineCommand.AddAddCommand();
         
         engineCommand.Action = CommandHandler.Create<IHost>((host) =>
         {

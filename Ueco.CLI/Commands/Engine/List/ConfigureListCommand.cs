@@ -3,6 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ueco.Services;
 
 namespace Ueco.Commands.Engine.List;
 
@@ -15,10 +16,13 @@ public static class ConfigureListCommand
         listCommand.Action = CommandHandler.Create<IHost>((host) =>
         {
             var serviceProvider = host.Services;
+            
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("Engine.ListCommand");
             
-            ListCommand.Execute(logger);
+            var unrealEngineAssociationRepository = serviceProvider.GetRequiredService<IUnrealEngineAssociationRepository>();
+           
+            ListCommand.Execute(unrealEngineAssociationRepository, logger);
         });
         
         command.Add(listCommand);

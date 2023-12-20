@@ -1,11 +1,14 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Ueco.Commands;
 using Ueco.Common;
+using Ueco.Services;
+using Ueco.Services.Impl;
 
 namespace Ueco;
 
@@ -14,9 +17,17 @@ public static class  Program
     private static Task Main(string[] args)
     {
         var cliConfiguration = BuildCommandLine();
-        cliConfiguration.UseHost(_ => Host.CreateDefaultBuilder(),
+        cliConfiguration.UseHost(_ => Host.CreateDefaultBuilder().UseContentRoot(AppDomain.CurrentDomain.BaseDirectory),
                 host =>
                 {
+                    host.ConfigureAppConfiguration((hostContext, config) =>
+                        {
+                            config
+                                .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + "appsettings.json")
+                                .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+                                .AddEnvironmentVariables();
+                        });
+                    
                     host.ConfigureLogging(builder =>
                     {
                         builder.ConfigureCustomFormatter();
@@ -28,8 +39,14 @@ public static class  Program
                             builder.AddFilter("Microsoft.Hosting", LogLevel.Information);
                         }
                     });
-                });
 
+                    host.ConfigureServices(services =>
+                    {
+                        services.AddLogging();
+                        services.AddSingleton<IUnrealEngineAssociationRepository, UnrealEngineEngineAssociationRepository>();
+                    });
+                });
+        
         return cliConfiguration.InvokeAsync(args);
     }
     
@@ -40,10 +57,9 @@ public static class  Program
 
     private static void ConfigureCustomFormatter(this ILoggingBuilder builder)
     {
-
         IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+            .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + "appsettings.json")
+            .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
             .AddEnvironmentVariables()
             .Build();
 
@@ -56,7 +72,7 @@ public static class  Program
         var debugColor = Enum.TryParse(config[color + "Debug"], out ConsoleColor parsedDebugColor);
 
         Enum.TryParse(config["Logging:Console:FormatterOptions:ColorBehavior"], out LoggerColorBehavior parsedColorBehavior);
-
+        
         builder.AddCustomFormatter(options =>
         {
             options.ColorBehavior = parsedColorBehavior;
