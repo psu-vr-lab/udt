@@ -5,6 +5,10 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ueco.CLI", "Ueco.CLI\Ueco.CLI.csproj", "{875F24DB-FAF4-4FCB-922B-409D0EE4E228}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ueco.Tests", "Ueco.Tests\Ueco.Tests.csproj", "{4A2DEFF1-8581-49E3-925A-7E335914746C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ueco.Utils", "Ueco.Utils\Ueco.Utils.csproj", "{7BCE94DA-A90C-4315-B0A7-6EB0F07B4AE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{875F24DB-FAF4-4FCB-922B-409D0EE4E228}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{875F24DB-FAF4-4FCB-922B-409D0EE4E228}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{875F24DB-FAF4-4FCB-922B-409D0EE4E228}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A2DEFF1-8581-49E3-925A-7E335914746C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A2DEFF1-8581-49E3-925A-7E335914746C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A2DEFF1-8581-49E3-925A-7E335914746C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A2DEFF1-8581-49E3-925A-7E335914746C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BCE94DA-A90C-4315-B0A7-6EB0F07B4AE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BCE94DA-A90C-4315-B0A7-6EB0F07B4AE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BCE94DA-A90C-4315-B0A7-6EB0F07B4AE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BCE94DA-A90C-4315-B0A7-6EB0F07B4AE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

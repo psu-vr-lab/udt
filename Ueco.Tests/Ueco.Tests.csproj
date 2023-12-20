@@ -22,4 +22,18 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Ueco.CLI\Ueco.CLI.csproj" />
+    </ItemGroup>
+
+
+
+    <ItemGroup>
+      <None Update="TestData\EmptyUProject\Empty.uproject">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+
+
+    </ItemGroup>
+
 </Project>

@@ -14,7 +14,7 @@ namespace Ueco;
 
 public static class  Program
 {
-    private static Task Main(string[] args)
+    public static Task Main(string[] args)
     {
         var cliConfiguration = BuildCommandLine();
         cliConfiguration.UseHost(_ => Host.CreateDefaultBuilder().UseContentRoot(AppDomain.CurrentDomain.BaseDirectory),

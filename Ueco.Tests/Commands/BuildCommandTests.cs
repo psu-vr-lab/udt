@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Ueco.Commands.Build;
 
-namespace Ueco.Tests.Commands.Build;
+namespace Ueco.Tests.Commands;
 
 public class BuildCommandTests
 {
