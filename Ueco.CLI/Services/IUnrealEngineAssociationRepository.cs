@@ -9,5 +9,6 @@ public interface IUnrealEngineAssociationRepository
     public void AssociateUnrealEngine(UnrealEngineAssociation unrealEngine);
     public int GetUnrealEnginesCount();
     public void DeleteUnrealEngine(int index);
+    public UnrealEngineAssociation GetDefaultUnrealEngine();
     public string ConfigPath { get; }
 }

@@ -1,11 +1,12 @@
 using Microsoft.Extensions.Logging;
+using Ueco.Services;
 using Ueco.Utils.Results;
 
 namespace Ueco.Commands.Build;
 
 public static class BuildCommand
 {
-    public static Result<string, BuildCommandError> Execute(FileInfo file, ILogger logger)
+    public static Result<string, BuildCommandError> Execute(FileInfo file, IUnrealBuildToolService unrealBuildTool, ILogger logger)
     {
         logger.LogTrace("Build command start execution...");
         
@@ -23,6 +24,8 @@ public static class BuildCommand
         }
         
         logger.LogTrace("Unreal Engine project detected: {uprojectFile}", uprojectFile);
+        
+        unrealBuildTool.Build(uprojectFile);
         
         return Result<string, BuildCommandError>.Ok("Unreal Engine project was built");
     }

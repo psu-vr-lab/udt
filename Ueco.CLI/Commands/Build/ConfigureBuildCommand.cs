@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ueco.Common;
+using Ueco.Services;
 using Ueco.Utils.Extensions;
 
 namespace Ueco.Commands.Build;
@@ -26,7 +27,9 @@ public static class ConfigureBuildCommand
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("BuildCommand");
             
-            var result = BuildCommand.Execute(file, logger);
+            var unrealBuildTool = serviceProvider.GetRequiredService<IUnrealBuildToolService>();
+            
+            var result = BuildCommand.Execute(file, unrealBuildTool, logger);
             logger.LogResult(result);
         });
         

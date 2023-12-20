@@ -73,4 +73,16 @@ public class UnrealEngineEngineAssociationRepository : IUnrealEngineAssociationR
         var json = JsonSerializer.Serialize(_unrealEngines);
         File.WriteAllText(ConfigPath, json);
     }
+    
+    public UnrealEngineAssociation GetDefaultUnrealEngine()
+    {
+        if (!_unrealEngines.Any())
+        {
+            throw new Exception("No engines found");
+        }
+        
+        return _unrealEngines.Count == 1 
+            ? _unrealEngines.First() 
+            : _unrealEngines.First(unrealEngineAssociation => unrealEngineAssociation.IsDefault);
+    }
 }

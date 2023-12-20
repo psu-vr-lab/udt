@@ -44,6 +44,7 @@ public static class  Program
                     {
                         services.AddLogging();
                         services.AddSingleton<IUnrealEngineAssociationRepository, UnrealEngineEngineAssociationRepository>();
+                        services.AddSingleton<IUnrealBuildToolService, UnrealBuildToolService>();
                     });
                 });
         
