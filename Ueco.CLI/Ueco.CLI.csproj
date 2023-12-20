@@ -36,4 +36,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ueco.Utils\Ueco.Utils.csproj" />
+  </ItemGroup>
 </Project>

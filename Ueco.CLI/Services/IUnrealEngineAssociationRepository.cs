@@ -4,7 +4,7 @@ namespace Ueco.Services;
 
 public interface IUnrealEngineAssociationRepository
 {
-    public List<UnrealEngineAssociation> GetUnrealEngines();
+    public IEnumerable<UnrealEngineAssociation> GetUnrealEngines();
     public UnrealEngineAssociation GetUnrealEngine(int index);
     public void AssociateUnrealEngine(UnrealEngineAssociation unrealEngine);
     public int GetUnrealEnginesCount();
