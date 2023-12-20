@@ -2,23 +2,25 @@ using System.CommandLine.IO;
 using System.CommandLine.Rendering;
 using Microsoft.Extensions.Logging;
 using Ueco.Services;
+using Ueco.Utils.Results;
 
 namespace Ueco.Commands.Engine.List;
 
 public static class ListCommand
 {
-    public static void Execute(IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
+    public static Result<string, ListCommandError> Execute(IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
     {
         var console = new SystemConsole();
-        var engines = engineAssociationRepository.GetUnrealEngines();
+        var engines = engineAssociationRepository.GetUnrealEngines().ToArray();
 
         if (!engines.Any())
         {
-            logger.LogWarning("You don't have any engines installed. Use `ueco engine add` to add one.");
-            return;
+            return ListCommandError.NoEngineAssociations();
         }
         
         var enginesTableView = new EngineInstallsTableView(engines);
         console.Append(enginesTableView);
+        
+        return Result<string, ListCommandError>.Ok(string.Empty);
     }
 }

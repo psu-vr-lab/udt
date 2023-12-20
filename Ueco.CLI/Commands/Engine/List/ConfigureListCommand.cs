@@ -3,6 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ueco.Common;
 using Ueco.Services;
 
 namespace Ueco.Commands.Engine.List;
@@ -22,7 +23,8 @@ public static class ConfigureListCommand
             
             var unrealEngineAssociationRepository = serviceProvider.GetRequiredService<IUnrealEngineAssociationRepository>();
            
-            ListCommand.Execute(unrealEngineAssociationRepository, logger);
+            var result = ListCommand.Execute(unrealEngineAssociationRepository, logger);
+            logger.LogResult(result);
         });
         
         command.Add(listCommand);

@@ -1,23 +1,27 @@
 using Microsoft.Extensions.Logging;
 using Ueco.Services;
+using Ueco.Utils.Results;
 
 namespace Ueco.Commands.Engine.Delete;
 
 public static class DeleteCommand
 {
-    public static void Execute(int index, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
+    public static Result<string, DeleteCommandError> Execute(int index, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
     {
         logger.LogTrace("Delete command start execution...");
 
-        index = index - 1;
+        index -= 1;
 
         if (index < 0 || index >= engineAssociationRepository.GetUnrealEnginesCount())
         {
-            logger.LogError("Index out of range: {index}", index + 1);
-            return;
+            return DeleteCommandError.IndexOutOfRange(index + 1, engineAssociationRepository.GetUnrealEnginesCount());
         }
         
+        var unrealEngineName = engineAssociationRepository.GetUnrealEngine(index).Name;
+        logger.LogInformation("Deleting {unrealEngineName} Unreal Engine install...", unrealEngineName);
+        
         engineAssociationRepository.DeleteUnrealEngine(index);
-        logger.LogInformation("Unreal Engine {index} deleted", index + 1);
+        
+        return Result<string, DeleteCommandError>.Ok($"{unrealEngineName}:{index + 1} Unreal Engine deleted");
     }
 }

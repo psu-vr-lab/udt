@@ -3,6 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ueco.Common;
 using Ueco.Services;
 
 namespace Ueco.Commands.Engine.Delete;
@@ -28,7 +29,8 @@ public static class ConfigureDeleteCommand
             
             var engineAssociationRepository = serviceProvider.GetRequiredService<IUnrealEngineAssociationRepository>();
             
-            DeleteCommand.Execute(index, engineAssociationRepository, logger);
+            var result = DeleteCommand.Execute(index, engineAssociationRepository, logger);
+            logger.LogResult(result);
         });
         
         command.Add(deleteCommand);

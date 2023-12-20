@@ -3,12 +3,13 @@ using Microsoft.Extensions.Logging;
 using Ueco.Common;
 using Ueco.Models;
 using Ueco.Services;
+using Ueco.Utils.Results;
 
 namespace Ueco.Commands.Engine.Add;
 
 public static class AddCommand
 {
-    public static void Execute(string name, FileInfo path, bool isDefault, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
+    public static Result<string, AddCommandError> Execute(string name, FileInfo path, bool isDefault, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
     {
         var ueDir = path.Directory;
         
@@ -16,25 +17,22 @@ public static class AddCommand
 
         if (ueDir is null)
         {
-            logger.LogError("Path is not a directory: {0}", path.FullName);
-            return;
+            return AddCommandError.PathIsNotDirectory(path.FullName);
         }
 
         if (!ueDir.Name.StartsWith("UE_"))
         {
             var findUeDir = path.Directory?.GetDirectories().FirstOrDefault(dir => dir.Name.StartsWith("UE_"));
-
             if (findUeDir is null)
             {
-                logger.LogError("Path is not a containing or starting with UE_(5.2,5.3,...) directory: {0}", path.FullName);
-                return;
+                return AddCommandError.DirectoryHasWrongName(ueDir.FullName);
             }
             
             ueDir = findUeDir;
         }
         
         var unrealEngineVersion = ueDir.Name;
-        logger.LogInformation("Unreal Engine {unrealEngineVersion} directory detected: {ueDir}", unrealEngineVersion, ueDir );
+        logger.LogTrace("Unreal Engine {unrealEngineVersion} directory detected: {ueDir}", unrealEngineVersion, ueDir );
 
         var engineAssociation = new UnrealEngineAssociation
         {
@@ -48,6 +46,6 @@ public static class AddCommand
         logger.LogTrace(JsonSerializer.Serialize(engineAssociation, JsonSerializerStaticOptions.GetOptions()));
         engineAssociationRepository.AssociateUnrealEngine(engineAssociation);
         
-        logger.LogInformation("Engine association added to config file: {configPath}", engineAssociationRepository.ConfigPath);
+        return Result<string, AddCommandError>.Ok($"Engine association added to config file: {engineAssociationRepository.ConfigPath}");
     }
 }

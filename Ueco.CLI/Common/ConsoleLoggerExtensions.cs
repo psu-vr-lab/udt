@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Ueco.Common.Console;
+using Ueco.Utils.Extensions;
+using Ueco.Utils.Results;
 
 namespace Ueco.Common;
 
@@ -13,5 +15,11 @@ public static class ConsoleLoggerExtensions
             .AddConsoleFormatter<UecoConsoleFormatter, UecoConsoleFormatterOptions>(configure);
         
         return builder;
+    }
+
+    public static void LogResult<TValue, TError>(this ILogger logger, Result<TValue, TError> result) where TError : Error
+    {
+        logger.LogTrace("--------------------------");
+        logger.LogResult(result, "[OK] ", "[ERROR] ");
     }
 }
