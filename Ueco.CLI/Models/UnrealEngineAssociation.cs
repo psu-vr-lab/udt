@@ -21,7 +21,7 @@ public class UnrealEngineAssociation
     /// <summary>
     /// Version of the Engine
     /// </summary>
-    public EngineVersion Version { get; set; }
+    public UnrealEngineVersion Version { get; set; }
     
     /// <summary>
     /// Use this Engine by default. If true, it will be used by default when no other Engine is selected

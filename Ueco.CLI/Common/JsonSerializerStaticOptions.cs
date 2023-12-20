@@ -16,7 +16,7 @@ public static class JsonSerializerStaticOptions
                 WriteIndented = true
             };
 
-            _options.Converters.Add(new JsonStringEnumConverter());
+            _options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower));
         }
 
         return _options;

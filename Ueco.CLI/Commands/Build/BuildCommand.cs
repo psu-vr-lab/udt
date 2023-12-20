@@ -23,6 +23,5 @@ public static class BuildCommand
         }
         
         logger.LogInformation("Unreal Engine project detected: {uprojectFile}", uprojectFile);
-        
     }
 }

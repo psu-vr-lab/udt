@@ -11,7 +11,7 @@ public sealed class EngineInstallsTableView : StackLayoutView
 
     public EngineInstallsTableView(IEnumerable<UnrealEngineAssociation> engineAssociations)
     {
-        var arrayEngineAssociations = engineAssociations as UnrealEngineAssociation[] ?? engineAssociations.ToArray();
+        var arrayEngineAssociations = engineAssociations.ToList();
         
         Console.ResetColor();
         
@@ -19,6 +19,7 @@ public sealed class EngineInstallsTableView : StackLayoutView
         Add(new ContentView("\n"));
 
         var tableView = new TableView<UnrealEngineAssociation>();
+        tableView.AddColumn(association => arrayEngineAssociations.IndexOf(association) + 1, new ContentView("#".Underline()));
 
         tableView.Items = arrayEngineAssociations;
         
@@ -31,7 +32,7 @@ public sealed class EngineInstallsTableView : StackLayoutView
             new ContentView("Path".Underline()));
         
         tableView.AddColumn(
-            association => association.Version.ToString().White(),
+            association => association.Version.ToString().ToLower().White(),
             new ContentView("Version".Underline()));
         
         tableView.AddColumn(

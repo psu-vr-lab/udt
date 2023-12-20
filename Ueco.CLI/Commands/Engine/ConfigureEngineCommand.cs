@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ueco.Commands.Engine.Add;
+using Ueco.Commands.Engine.Delete;
 using Ueco.Commands.Engine.List;
 
 namespace Ueco.Commands.Engine;
@@ -16,6 +17,7 @@ public static class ConfigureEngineCommand
         
         engineCommand.AddListCommand();
         engineCommand.AddAddCommand();
+        engineCommand.AddDeleteCommand();
         
         engineCommand.Action = CommandHandler.Create<IHost>((host) =>
         {

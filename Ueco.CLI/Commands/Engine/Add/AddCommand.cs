@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Ueco.Common;
 using Ueco.Models;
@@ -23,7 +22,7 @@ public static class AddCommand
 
         if (!ueDir.Name.StartsWith("UE_"))
         {
-            var findUeDir = path.Directory.GetDirectories().FirstOrDefault(dir => dir.Name.StartsWith("UE_"));
+            var findUeDir = path.Directory?.GetDirectories().FirstOrDefault(dir => dir.Name.StartsWith("UE_"));
 
             if (findUeDir is null)
             {
@@ -41,11 +40,14 @@ public static class AddCommand
         {
             Name = name,
             Path = ueDir.FullName,
-            Version = EngineVersionExtensions.Parse(unrealEngineVersion),
+            Version = unrealEngineVersion.ToUnrealEngineVersion(),
             IsDefault = isDefault
         };
         
         logger.LogInformation("Engine association created: ");
         logger.LogTrace(JsonSerializer.Serialize(engineAssociation, JsonSerializerStaticOptions.GetOptions()));
+        engineAssociationRepository.AssociateUnrealEngine(engineAssociation);
+        
+        logger.LogInformation("Engine association added to config file: {configPath}", engineAssociationRepository.ConfigPath);
     }
 }

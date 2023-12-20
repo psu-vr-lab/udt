@@ -24,7 +24,8 @@ public static class ConfigureAddCommand
             new CliOption<bool>("--isDefault")
             {
                 Description = "Set this engine as default",
-                Required = false
+                Required = false,
+                Aliases = { "-d" }
             }
         };
         
