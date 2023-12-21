@@ -9,10 +9,10 @@ public static class ConsoleLoggerExtensions
 {
     public static ILoggingBuilder AddCustomFormatter(
         this ILoggingBuilder builder,
-        Action<UecoConsoleFormatterOptions> configure)
+        Action<UEScriptConsoleFormatterOptions> configure)
     {
         builder.AddConsole(options => options.FormatterName = "ueco")
-            .AddConsoleFormatter<UecoConsoleFormatter, UecoConsoleFormatterOptions>(configure);
+            .AddConsoleFormatter<UEScriptConsoleFormatter, UEScriptConsoleFormatterOptions>(configure);
         
         return builder;
     }

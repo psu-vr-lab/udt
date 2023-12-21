@@ -43,8 +43,10 @@ public static class  Program
                     host.ConfigureServices(services =>
                     {
                         services.AddLogging();
+                        
                         services.AddSingleton<IUnrealEngineAssociationRepository, UnrealEngineEngineAssociationRepository>();
                         services.AddSingleton<IUnrealBuildToolService, UnrealBuildToolService>();
+                        services.AddSingleton<IUnrealEngineEditorService, UnrealEngineEditorService>();
                     });
                 });
         
@@ -82,7 +84,7 @@ public static class  Program
             options.ErrorColor = errorColor ? parsedErrorColor : Console.ForegroundColor;
             options.DebugColor = debugColor ? parsedDebugColor : Console.ForegroundColor;
             options.InformationColor = informationColor ? parsedInformationColor : Console.ForegroundColor;
-            options.UseUtcTimestamp = config["Logging:Console:FormatterOptions:UseUtcTimestamp"] == "true";
+            options.UseUtcTimestamp = config.GetValue<bool>("Logging:Console:FormatterOptions:UseUtcTimestamp");
         });
     }
 }

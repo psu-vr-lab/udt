@@ -12,7 +12,7 @@ public class UnrealBuildToolService(IUnrealEngineAssociationRepository unrealEng
     {
         unrealEngine ??= unrealEngineRepository.GetDefaultUnrealEngine();
         
-        var unrealBuildToolPath = UnrealPaths.GetUnrealBuildToolPath(unrealEngine);
+        var unrealBuildToolPath = UnrealPaths.GetUnrealEngineBuildToolPath(unrealEngine);
         
         var moduleName = Path.GetFileNameWithoutExtension(uprojectFile.Name) + "Editor";
         var moduleTargets = "Development";
@@ -26,7 +26,7 @@ public class UnrealBuildToolService(IUnrealEngineAssociationRepository unrealEng
         }
         
         var projectPath = $"-project=\"{uprojectFile.FullName}\"";
-        var buildArguments = "-waitmutex -NoHotReload -buildscw";
+        const string buildArguments = "-waitmutex -NoHotReload -buildscw";
         
         logger.LogTrace($"Unreal Engine build command: {unrealBuildToolPath} {moduleName} {moduleTargets} {projectPath} {buildArguments}\n");
 

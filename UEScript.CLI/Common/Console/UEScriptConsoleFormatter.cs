@@ -5,12 +5,12 @@ using Microsoft.Extensions.Options;
 
 namespace UEScript.CLI.Common.Console;
 
-public class UecoConsoleFormatter : ConsoleFormatter, IDisposable
+public class UEScriptConsoleFormatter : ConsoleFormatter, IDisposable
 {
     private readonly IDisposable? _optionsReloadToken;
-    private UecoConsoleFormatterOptions _formatterOptions;
+    private UEScriptConsoleFormatterOptions _formatterOptions;
     
-    public UecoConsoleFormatter(IOptionsMonitor<UecoConsoleFormatterOptions> optionsMonitor) : base("ueco")
+    public UEScriptConsoleFormatter(IOptionsMonitor<UEScriptConsoleFormatterOptions> optionsMonitor) : base("ueco")
     {
         _optionsReloadToken = optionsMonitor.OnChange(options => _formatterOptions = options);
         _formatterOptions = optionsMonitor.CurrentValue;
@@ -33,7 +33,7 @@ public class UecoConsoleFormatter : ConsoleFormatter, IDisposable
         {
             System.Console.ForegroundColor = logEntry.LogLevel switch
             {
-                LogLevel.Error or LogLevel.Critical => _formatterOptions.ErrorColor,
+                LogLevel.Error or LogLevel.Critical =>  _formatterOptions.ErrorColor,
                 LogLevel.Warning => _formatterOptions.WarningColor,
                 LogLevel.Trace => _formatterOptions.TraceColor,
                 LogLevel.Information => _formatterOptions.InformationColor,
@@ -45,9 +45,9 @@ public class UecoConsoleFormatter : ConsoleFormatter, IDisposable
         
         if (_formatterOptions.UseUtcTimestamp)
         {
-            message = $"{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss.fffffffZ} {message}";
+            message = $"{DateTime.UtcNow:HH:mm:ss} {message}";
         }
-
+        
         textWriter.WriteLine(message);
     }
     

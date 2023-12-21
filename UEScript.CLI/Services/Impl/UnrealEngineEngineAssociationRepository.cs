@@ -13,6 +13,8 @@ public class UnrealEngineEngineAssociationRepository : IUnrealEngineAssociationR
 
     public UnrealEngineEngineAssociationRepository(IConfiguration configuration, ILogger<UnrealEngineAssociation> logger)
     {
+        // TODO: Remove exceptions or handle them nicely
+        
         ConfigPath = configuration["ConfigPath"] ?? "ueco.json";
         if (!Path.IsPathRooted(ConfigPath))
         {

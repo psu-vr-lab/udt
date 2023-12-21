@@ -1,10 +1,12 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 
 namespace UEScript.CLI.Common.Console;
 
-public class UecoConsoleFormatterOptions : ConsoleFormatterOptions
+public class UEScriptConsoleFormatterOptions : ConsoleFormatterOptions
 {
     public LoggerColorBehavior ColorBehavior { get; set; }
+    
     public ConsoleColor WarningColor { get; set; }
     public ConsoleColor TraceColor { get; set; }
     public ConsoleColor ErrorColor { get; set; }
