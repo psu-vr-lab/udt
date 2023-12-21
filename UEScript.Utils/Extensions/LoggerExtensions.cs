@@ -13,16 +13,13 @@ public static class LoggerExtensions
         }
         else
         {
-            logger.LogError(result.GetErrors(), errorPrefix);
+            logger.LogError(result, errorPrefix);
         }
     }
     
-    private static void LogError(this ILogger logger, Error[] errors, string errorPrefix = "")
+    private static void LogError(this ILogger logger, Error error, string errorPrefix = "")
     {
-        foreach (var error in errors)
-        {
-            var message = errorPrefix +  error.GetMessage();
-            logger.LogError(message);
-        }
+        var message = errorPrefix +  error.GetMessage();
+        logger.LogError(message);
     }
 }

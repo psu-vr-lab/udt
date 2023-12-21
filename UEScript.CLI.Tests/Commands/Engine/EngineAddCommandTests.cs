@@ -26,6 +26,6 @@ public class EngineAddCommandTests
         
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(AddCommandError.DirectoryHasWrongName(unrealEngineAssociation.Path).ToString(), result.GetErrors().First().ToString());
+        Assert.Equal(AddCommandError.DirectoryHasWrongName(unrealEngineAssociation.Path).ToString(), result.GetError()!.ToString());
     }
 }

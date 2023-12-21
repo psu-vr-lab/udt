@@ -1,33 +1,33 @@
-using Microsoft.Extensions.Logging;
-
 namespace UEScript.Utils.Results;
 
 public class Result<TValue, TError> where TError : Error
 {
     private readonly TValue? _value;
-    private readonly Error[] _errors;
+    private readonly TError? _error;
 
     protected Result(TValue value)
     {
         _value = value;
-        _errors = Array.Empty<Error>();
+        _error = default;
     }
 
-    protected Result(params Error[]? errors)
+    protected Result(TError? error)
     {
         _value = default;
-        _errors = errors ?? Array.Empty<Error>();
+        _error = error;
     }
     
-    public bool IsSuccess => !_errors.Any();
+    public bool IsSuccess => _error is null;
     
     public TValue? GetValue() => _value;
-    public Error[] GetErrors() => _errors;
+    public TError? GetError() => _error;
     
     public static Result<TValue, TError> Ok(TValue value) => new Result<TValue, TError>(value);
-    public static Result<TValue, TError> Error(params TError[] error) => new Result<TValue, TError>(error);
+    public static Result<TValue, TError> Error(TError error) => new Result<TValue, TError>(error);
+    public static Result<TValue, TError> Error(Error error) => new Result<TValue, TError>(error as TError);
     
     public static implicit operator Result<TValue, TError>(TValue value) => Ok(value);
-    public static implicit operator Result<TValue, TError>(TError[] errors) => Error(errors);
     public static implicit operator Result<TValue, TError>(TError error) => Error(error);
+    public static implicit operator TValue (Result<TValue, TError> result) => result.GetValue()!;
+    public static implicit operator TError (Result<TValue, TError> result) => result.GetError()!;
 }
