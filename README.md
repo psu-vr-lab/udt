@@ -1,6 +1,8 @@
-# ueco
+# uescript
 
-Unreal Engine project command runner.
+Unreal Engine CLI tool. (for now?)
+
+# Currently project is being rewritten. So, if you need a old version (wich works), please go to main branch.
 
 ![Nuget](https://img.shields.io/nuget/v/Uepme?color=g&label=nuget&logo=nuget&style=plastic)
 
