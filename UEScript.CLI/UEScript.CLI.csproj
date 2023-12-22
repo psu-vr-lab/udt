@@ -8,7 +8,12 @@
         <ToolCommandName>uescript</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Version>3.0.0</Version>
+        <Year>$([System.DateTime]::Now.ToString("yy"))</Year>
+        <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
+        <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
+        <Time>$([System.DateTime]::Now.ToString("yyy-MM-dd-HH-mm-ss"))</Time>
+        <MajorVersion>3.1</MajorVersion>
+        <Version>$(MajorVersion).$(Time)</Version>
         <Description>Unreal Engine project command runner</Description>
         <Authors>Jejikeh</Authors>
         <RepositoryUrl>"https://github.com/jejikeh/ueco"</RepositoryUrl>
