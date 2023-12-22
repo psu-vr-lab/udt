@@ -19,4 +19,4 @@ jobs:
 
       # Publish
       - name: Push generated package to GitHub registry
-        run: dotnet nuget push ./UEScript.CLI/nuget/*.nupkg --skip-duplicate --no-symbols true -k ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push ./UEScript.CLI/nuget/*.nupkg -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true -k ${{ secrets.NUGET_API_KEY }}
