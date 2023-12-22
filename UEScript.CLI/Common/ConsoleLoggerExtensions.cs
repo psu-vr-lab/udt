@@ -21,5 +21,7 @@ public static class ConsoleLoggerExtensions
     {
         logger.LogTrace("--------------------------");
         logger.LogResult(result, "[OK] ", "[ERROR] ");
+        System.Console.ResetColor(); // Reset color for Console
+        // TODO: Refactor logger so i dont need this ^
     }
 }
