@@ -9,6 +9,8 @@ using UEScript.CLI.Commands;
 using UEScript.CLI.Common;
 using UEScript.CLI.Services;
 using UEScript.CLI.Services.Impl;
+using System.Reflection;
+[assembly: AssemblyVersion("3.1.*")]
 
 namespace UEScript.CLI;
 
@@ -20,7 +22,7 @@ public static class  Program
         cliConfiguration.UseHost(_ => Host.CreateDefaultBuilder().UseContentRoot(AppDomain.CurrentDomain.BaseDirectory),
                 host =>
                 {
-                    host.ConfigureAppConfiguration((hostContext, config) =>
+                    host.ConfigureAppConfiguration(config =>
                         {
                             config
                                 .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + "appsettings.json")
@@ -60,14 +62,9 @@ public static class  Program
 
     private static void ConfigureCustomFormatter(this ILoggingBuilder builder)
     {
-        IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + "appsettings.json")
-            .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
-            .AddEnvironmentVariables()
-            .Build();
+        var config = GetConfiguration();
 
         const string color = "Logging:Console:FormatterOptions:Colors:";
-
         var traceColor = Enum.TryParse(config[color + "Trace"], out ConsoleColor parsedTraceColor);
         var informationColor = Enum.TryParse(config[color + "Information"], out ConsoleColor parsedInformationColor);
         var warningColor = Enum.TryParse(config[color + "Warning"], out ConsoleColor parsedWarningColor);
@@ -86,5 +83,16 @@ public static class  Program
             options.InformationColor = informationColor ? parsedInformationColor : Console.ForegroundColor;
             options.UseUtcTimestamp = config.GetValue<bool>("Logging:Console:FormatterOptions:UseUtcTimestamp");
         });
+    }
+
+    private static IConfiguration GetConfiguration()
+    {
+
+        IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + "appsettings.json")
+            .AddJsonFile(AppDomain.CurrentDomain.BaseDirectory + $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
+        return config;
     }
 }
