@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using UEScript.CLI.Common;
 using UEScript.CLI.Services;
+using UEScript.Utils.Extensions;
 
 namespace UEScript.CLI.Commands.Engine.List;
 

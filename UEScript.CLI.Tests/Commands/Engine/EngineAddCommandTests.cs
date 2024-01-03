@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using UEScript.CLI.Commands;
 using UEScript.CLI.Commands.Engine.Add;
 using UEScript.CLI.Services;
 
@@ -26,6 +27,6 @@ public class EngineAddCommandTests
         
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(AddCommandError.DirectoryHasWrongName(unrealEngineAssociation.Path).ToString(), result.GetError()!.ToString());
+        Assert.Equal(CommandError.DirectoryHasWrongName(unrealEngineAssociation.Path).ToString(), result.GetError()!.ToString());
     }
 }

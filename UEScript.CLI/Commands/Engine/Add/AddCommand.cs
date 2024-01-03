@@ -9,23 +9,23 @@ namespace UEScript.CLI.Commands.Engine.Add;
 
 public static class AddCommand
 {
-    public static Result<string, AddCommandError> Execute(string name, FileInfo path, bool isDefault, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
+    public static Result<string, CommandError> Execute(string name, FileInfo path, bool isDefault, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
     {
         var ueDir = path.Directory;
         
         logger.LogTrace("Add command start execution...");
 
-        if (ueDir is null)
+        if (ueDir is null || !ueDir.Exists)
         {
-            return AddCommandError.PathIsNotDirectory(path.FullName);
+            return CommandError.PathIsNotDirectory(path.FullName);
         }
-
+        
         if (!ueDir.Name.StartsWith("UE_"))
         {
             var findUeDir = path.Directory?.GetDirectories().FirstOrDefault(dir => dir.Name.StartsWith("UE_"));
             if (findUeDir is null)
             {
-                return AddCommandError.DirectoryHasWrongName(ueDir.FullName);
+                return CommandError.DirectoryHasWrongName(ueDir.FullName);
             }
             
             ueDir = findUeDir;
@@ -46,6 +46,6 @@ public static class AddCommand
         logger.LogTrace(JsonSerializer.Serialize(engineAssociation, JsonSerializerStaticOptions.GetOptions()));
         engineAssociationRepository.AssociateUnrealEngine(engineAssociation);
         
-        return Result<string, AddCommandError>.Ok($"Engine association added to config file: {engineAssociationRepository.ConfigPath}");
+        return Result<string, CommandError>.Ok($"Engine association added to config file: {engineAssociationRepository.ConfigPath}");
     }
 }

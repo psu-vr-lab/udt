@@ -8,6 +8,7 @@ using UEScript.CLI.Commands.Engine.Delete;
 using UEScript.CLI.Commands.Engine.List;
 using UEScript.CLI.Common;
 using UEScript.CLI.Services;
+using UEScript.Utils.Extensions;
 
 namespace UEScript.CLI.Commands.Engine;
 

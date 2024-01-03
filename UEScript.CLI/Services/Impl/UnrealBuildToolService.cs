@@ -1,14 +1,16 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
+using UEScript.CLI.Commands;
 using UEScript.CLI.Common;
 using UEScript.CLI.Models;
+using UEScript.Utils.Results;
 
 namespace UEScript.CLI.Services.Impl;
 
 public class UnrealBuildToolService(IUnrealEngineAssociationRepository unrealEngineRepository, ILogger<UnrealBuildToolService> logger) : IUnrealBuildToolService
 {
-    public void Build(FileInfo uprojectFile, UnrealEngineAssociation? unrealEngine = null)
+    public Result<string, CommandError> Build(FileInfo uprojectFile, UnrealEngineAssociation? unrealEngine = null)
     {
         unrealEngine ??= unrealEngineRepository.GetDefaultUnrealEngine();
         
@@ -20,6 +22,7 @@ public class UnrealBuildToolService(IUnrealEngineAssociationRepository unrealEng
         {
             moduleTargets = "Mac " + moduleTargets;
         }
+        
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             moduleTargets = "Win64 " + moduleTargets;
@@ -28,9 +31,16 @@ public class UnrealBuildToolService(IUnrealEngineAssociationRepository unrealEng
         var projectPath = $"-project=\"{uprojectFile.FullName}\"";
         const string buildArguments = "-waitmutex -NoHotReload -buildscw";
         
-        logger.LogTrace($"Unreal Engine build command: {unrealBuildToolPath} {moduleName} {moduleTargets} {projectPath} {buildArguments}\n");
+        logger.LogInformation($"Unreal Engine build command: {unrealBuildToolPath} {moduleName} {moduleTargets} {projectPath} {buildArguments}");
+        
+        if (!File.Exists(unrealBuildToolPath))
+        {
+            return Result<string, CommandError>.Error(new CommandError($"Unreal Engine build tool path in config is set to ({unrealBuildToolPath}), but it doesn't exist"));
+        }
 
         var result = Process.Start(unrealBuildToolPath, $"{moduleName} {moduleTargets} {projectPath} {buildArguments}");
         result.WaitForExit();
+        
+        return Result<string, CommandError>.Ok("Unreal Engine project was built");
     }
 }

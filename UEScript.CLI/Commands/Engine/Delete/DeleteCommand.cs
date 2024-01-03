@@ -6,7 +6,7 @@ namespace UEScript.CLI.Commands.Engine.Delete;
 
 public static class DeleteCommand
 {
-    public static Result<string, DeleteCommandError> Execute(int index, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
+    public static Result<string, CommandError> Execute(int index, IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
     {
         logger.LogTrace("Delete command start execution...");
 
@@ -14,7 +14,7 @@ public static class DeleteCommand
 
         if (index < 0 || index >= engineAssociationRepository.GetUnrealEnginesCount())
         {
-            return DeleteCommandError.IndexOutOfRange(index + 1, engineAssociationRepository.GetUnrealEnginesCount());
+            return new CommandError($"Index out of range: {index + 1}, max {engineAssociationRepository.GetUnrealEnginesCount()}");
         }
         
         var unrealEngineName = engineAssociationRepository.GetUnrealEngine(index).Name;
@@ -22,6 +22,6 @@ public static class DeleteCommand
         
         engineAssociationRepository.DeleteUnrealEngine(index);
         
-        return Result<string, DeleteCommandError>.Ok($"{unrealEngineName}:{index + 1} Unreal Engine deleted");
+        return Result<string, CommandError>.Ok($"{unrealEngineName}:{index + 1} Unreal Engine deleted");
     }
 }

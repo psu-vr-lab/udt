@@ -43,6 +43,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\UEScript.Logging\UEScript.Logging.csproj" />
         <ProjectReference Include="..\UEScript.Utils\UEScript.Utils.csproj"/>
     </ItemGroup>
 </Project>
