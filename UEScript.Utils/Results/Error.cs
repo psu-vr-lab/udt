@@ -1,22 +1,11 @@
 namespace UEScript.Utils.Results;
 
-public class Error
+public class Error(string message, Exception? exception = null)
 {
-    private readonly string _message;
-    private readonly Exception? _exception;
-    
-    public Error(string message, Exception? exception = null)
+    public Error(Exception exception) : this(exception.Message, exception)
     {
-        _message = message;
-        _exception = exception;
     }
     
-    public Error(Exception exception)
-    {
-        _message = exception.Message;
-        _exception = exception;
-    }
-    
-    public string GetMessage() => _message;
-    public Exception? GetException() => _exception;
+    public string GetMessage() => message;
+    public Exception? GetException() => exception;
 }

@@ -5,7 +5,7 @@ namespace UEScript.Logging;
 
 public class UEScriptLogger(string name, Func<UEScriptLoggerConfiguration> getConfiguration) : ILogger
 {
-    private Stopwatch _timeSinceLastLog = new Stopwatch();
+    private readonly Stopwatch _timeSinceLastLog = new Stopwatch();
     
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
@@ -28,8 +28,7 @@ public class UEScriptLogger(string name, Func<UEScriptLoggerConfiguration> getCo
 
     public bool IsEnabled(LogLevel logLevel)
     {
-        // return getConfiguration().LogLevelColors.ContainsKey(logLevel);
-        return true;
+        return getConfiguration().LogLevelColors.ContainsKey(logLevel);
     }
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull
