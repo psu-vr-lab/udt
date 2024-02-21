@@ -56,7 +56,7 @@ public static class ProgramConfiguration
             services.AddSingleton<IUnrealEngineAssociationRepository, UnrealEngineEngineAssociationRepository>();
             services.AddSingleton<IUnrealBuildToolService, UnrealBuildToolService>();
             services.AddSingleton<IUnrealEngineEditorService, UnrealEngineEditorService>();
-            services.AddSingleton<IFileDownloaderService, FileDownloaderServiceService>();
+            services.AddSingleton<IFileDownloaderService, FileDownloaderService>();
             services.AddSingleton<IUnrealArgsBuilder, UnrealArgsBuilder>();
         });
     }

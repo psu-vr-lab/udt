@@ -6,7 +6,7 @@ using UEScript.Utils.Results;
 
 namespace UEScript.CLI.Services.Impl;
 
-public class FileDownloaderServiceService : IFileDownloaderService
+public class FileDownloaderService : IFileDownloaderService
 {
     public async Task<Result<string, CommandError>> DownloadFile(string url, DirectoryInfo filePath, ILogger logger)
     {
@@ -19,8 +19,11 @@ public class FileDownloaderServiceService : IFileDownloaderService
             {
                 var gettingReadyTask = ctx.AddTask("[cyan]Downloading progress:[/]");
                 var uri = new Uri(url);
+                
                 using var httpClient = new HttpClient();
+                
                 responseMessage = await httpClient.GetStreamAsync(uri);
+                
                 while (!ctx.IsFinished)
                 {
                     await Task.Delay(300);
