@@ -10,16 +10,14 @@ public static class ListCommand
 {
     public static Result<string, CommandError> Execute(IUnrealEngineAssociationRepository engineAssociationRepository, ILogger logger)
     {
-        var console = new SystemConsole();
         var engines = engineAssociationRepository.GetUnrealEngines().ToArray();
 
-        if (!engines.Any())
+        if (engines.Length == 0)
         {
             return CommandError.NoEngineAssociations();
         }
         
-        var enginesTableView = new EngineInstallsTableView(engines);
-        console.Append(enginesTableView);
+        EngineInstallsTableView.ToTable(engines);
         
         return Result<string, CommandError>.Ok(string.Empty);
     }

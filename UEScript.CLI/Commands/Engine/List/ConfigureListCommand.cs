@@ -13,21 +13,22 @@ public static class ConfigureListCommand
 {
     public static void AddListCommand(this CliCommand command)
     {
-        var listCommand = new CliCommand("list", "List installed Unreal Engine versions");
-        
-        listCommand.Action = CommandHandler.Create<IHost>((host) =>
+        var listCommand = new CliCommand("list", "List installed Unreal Engine versions")
         {
-            var serviceProvider = host.Services;
+            Action = CommandHandler.Create<IHost>((host) =>
+            {
+                var serviceProvider = host.Services;
             
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger("Engine.ListCommand");
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                var logger = loggerFactory.CreateLogger("Engine.ListCommand");
             
-            var unrealEngineAssociationRepository = serviceProvider.GetRequiredService<IUnrealEngineAssociationRepository>();
+                var unrealEngineAssociationRepository = serviceProvider.GetRequiredService<IUnrealEngineAssociationRepository>();
            
-            var result = ListCommand.Execute(unrealEngineAssociationRepository, logger);
-            logger.LogResult(result);
-        });
-        
+                var result = ListCommand.Execute(unrealEngineAssociationRepository, logger);
+                logger.LogResult(result);
+            })
+        };
+
         command.Add(listCommand);
     }
 }
