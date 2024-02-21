@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using UEScript.CLI.Common;
 using UEScript.CLI.Models;
 
@@ -11,9 +12,19 @@ public class UnrealEngineEditorService(IUnrealEngineAssociationRepository unreal
         unrealEngine ??= unrealEngineRepository.GetDefaultUnrealEngine();
         
         var unrealEditorPath = UnrealPaths.GetUnrealEngineEditorPath(unrealEngine);
+
+        var result = default(Process);
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            result = Process.Start(unrealEditorPath, uprojectFile.FullName);
+        }
         
-        var result = Process.Start(unrealEditorPath, uprojectFile.FullName);
-        
-        result.WaitForExit();
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            result = Process.Start("open", $"-n {unrealEditorPath} --args {uprojectFile.FullName}");
+        }
+
+        result?.WaitForExit();
     }
 }
