@@ -28,7 +28,7 @@ public static class InstallCommand
         
         logger.LogInformation($"Starting download engine zip from '{url}'...");
         
-        var downloadResult = await fileDownloaderService.DownloadFile(url, directory);
+        var downloadResult = await fileDownloaderService.DownloadFile(url, directory, logger);
 
         if (!downloadResult.IsSuccess)
         {

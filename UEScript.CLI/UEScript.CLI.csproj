@@ -26,6 +26,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+        <PackageReference Include="Spectre.Console" Version="0.48.0" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.23407.1"/>
         <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.23407.1"/>
         <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.23407.1"/>
