@@ -1,92 +1,15 @@
 # uescript
 
-Unreal Engine CLI tool. (for now?)
+uescript - is a cli tool for Unreal Engine.
 
-# Currently project is being rewritten. So, if you need a old version (wich works), please go to main branch.
+# Install
 
-![Nuget](https://img.shields.io/nuget/v/Uepme?color=g&label=nuget&logo=nuget&style=plastic)
+To install uescript tool you can use package from Nuget. You need latest .NET SDK for this.
 
-## Features
-
-- Project Management without Epic Games Launcher
-- Creating a С++ Unreal project without the participation of Visual Studio IDE
-- Building a project without Visual Studio IDE
-- Creates .bat files for compilation already in the created sln project.
-## Project structure
-The project is created following the example from [this tutorial](https://youtu.be/94FvzO1HVzY).
-
-## Deployment
-
-To deploy uepme run
-
-```bash
-  # clone repository
-  git clone https://github.com/jejikeh/Uepme.git
-
-  # build project
-  dotnet pack
-
-  # install package
-  dotnet tool install --global --add-source ./nupkg uepme
+```sh
+dotnet tool install --global UEScript.CLI
 ```
 
-## Installation
+# Usage
 
-1. Install uepme as [nuget package](https://www.nuget.org/packages/Uepme)
-
-```bash
-  dotnet tool install --global Uepme --version 2.9.9
-```
-
-2. Download the zip archive from the releases tab and add the uepme folder to the PATH
-
-## Commands
-
-#### Example
-
-```bash
-  # configure uepme
-  # on fist launch
-  uepme
-  # or later
-  uepme config
-  # creating a project using the path specified in the config
-  uepme new -c --name ExampleUepmeProject
-  uepme build --name ExampleUepmeProject
-  uepme editor -n ExampleUepmeProject
-  # creating a project using an open folder in the terminal
-
-  # create new project and build it
-  uepme new -n -b ExampleUepmeProject
-  cd ExampleUepmeProject
-  # launch the editor
-  uepme editor
-```
-
-## Help
-
-View documentation for any command type in the terminal :
-
-```bash
-# specific command
-uepme %command% --help
-# global
-uepme help
-```
-
-| Verbs                                              | Type                                                  |
-| :------------------------------------------------- | :---------------------------------------------------- |
-| `new (--name, --config, --build) ExampleName`      | Creates an Unreal c++ project and launches the editor |
-| `build (-n, ) ExampleName`                         | Build Unreal project                                  |
-| `editor (-n, ) ExampleName`                        | Launch editor                                         |
-| `cook (-n, ) ExampleName`                          | Cook content of project                               |
-| `compile (-n, ) ExampleName`                       | Build a standalone version of project                 |
-| `run (-n, ) ExampleName`                           | Run .exe standalone file                              |
-| `open (-n, ) ExampleName`                          | Open project folder in the Explorer                   |
-| `link (-p, ) C:\Documents\Projects\ExampleProject` | Linking an existing unreal project with uepme         |
-| `delete -n ExampleName`                            | Delete the uepme project configuration file           |
-| `list`                                 | Print all uepme projects                              |
-
-### font
-
-for ascii art is used figlet font [larry3d](http://www.figlet.org/fontdb_example.cgi?font=larry3d.flf)
+To run uescript tool you can use `uescript` command.
