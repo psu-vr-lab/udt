@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Hosting;
+using System.CommandLine.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -53,11 +54,15 @@ public static class ProgramConfiguration
     {
         host.ConfigureServices(services =>
         {
+            services.AddHttpClient();
+            
             services.AddSingleton<IUnrealEngineAssociationRepository, UnrealEngineEngineAssociationRepository>();
             services.AddSingleton<IUnrealBuildToolService, UnrealBuildToolService>();
             services.AddSingleton<IUnrealEngineEditorService, UnrealEngineEditorService>();
-            services.AddSingleton<IFileDownloaderService, FileDownloaderService>();
             services.AddSingleton<IUnrealArgsBuilder, UnrealArgsBuilder>();
+
+            services.AddSingleton<IFileDownloaderService, FileDownloaderService>();
+            services.AddSingleton<IFileExtractor, FileExtractor>();
         });
     }
 

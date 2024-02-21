@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using UEScript.CLI.Services;
 using UEScript.Utils.Extensions;
+using UEScript.Utils.Results;
 
 namespace UEScript.CLI.Commands.Engine.Install;
 
@@ -48,12 +49,16 @@ public static class ConfigureInstallCommand
 
             var engineAssociationRepository = serviceProvider.GetRequiredService<IUnrealEngineAssociationRepository>();
             var fileDownloader = serviceProvider.GetRequiredService<IFileDownloaderService>();
+            var fileExtractor = serviceProvider.GetRequiredService<IFileExtractor>();
 
-            var act = async () => await InstallCommand.Execute(name, path, isDefault, url, logger, fileDownloader, engineAssociationRepository);
-
-            var result = Task.Run(act).Result;
+            var result = Task.Run(Act).Result;
             
             logger.LogResult(result);
+            
+            return;
+
+            async Task<Result<string, CommandError>> Act() => 
+                await InstallCommand.Execute(name, path, isDefault, url, logger, fileDownloader, fileExtractor, engineAssociationRepository);
         });
 
         command.Add(installCommand);
