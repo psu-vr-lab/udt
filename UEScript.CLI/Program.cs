@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using UEScript.CLI.Configurations;
 
 [assembly: AssemblyVersion("3.1.*")]
@@ -12,7 +12,7 @@ public static class  Program
         var cliConfiguration = ProgramConfiguration
             .BuildCommandLine()
             .Configure(args);
-        
+      
         return cliConfiguration.InvokeAsync(args);
     }
 }
