@@ -29,7 +29,7 @@ public class UnrealArgsBuilder(IUnrealEngineAssociationRepository unrealEngineAs
         }
         
         var moduleName = Path.GetFileNameWithoutExtension(uprojectFile.Name) + "Editor";
-        var moduleTargets = PlatformNames.GetPlatformName() + moduleTarget;
+        var moduleTargets = $"{PlatformNames.GetPlatformName()} {moduleTarget}";
         
         // @Incomplete: ProjectPath is also arguments...
         var projectPath = $"-project=\"{uprojectFile.FullName}\"";
