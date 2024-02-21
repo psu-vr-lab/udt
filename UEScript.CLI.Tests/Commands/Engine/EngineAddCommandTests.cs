@@ -12,7 +12,7 @@ public class EngineAddCommandTests
     private readonly Mock<IUnrealEngineAssociationRepository> _unrealEngineAssociationRepository = new Mock<IUnrealEngineAssociationRepository>();
 
     [Fact]
-    public void ShouldFailWhenDirectoryIsNotUnrealEngine()
+    public void ShouldFail_WhenDirectory_IsNotUnrealEngine()
     {
         // Arrange
         var unrealEngineAssociation = FakeDataProvider.GetUnrealEngine();

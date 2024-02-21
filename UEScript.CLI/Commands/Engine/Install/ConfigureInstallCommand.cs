@@ -34,8 +34,12 @@ public static class ConfigureInstallCommand
             },
         };
 
-        installCommand.Action = CommandHandler.Create<string, FileInfo, string, bool, IHost>
-        ((name, path,url,isDefault, host) =>
+        installCommand.Action = CommandHandler.Create<string, FileInfo, string, bool, IHost>((
+            name, 
+            path,
+            url,
+            isDefault,
+            host) =>
         {
             var serviceProvider = host.Services;
 
@@ -45,7 +49,7 @@ public static class ConfigureInstallCommand
             var engineAssociationRepository = serviceProvider.GetRequiredService<IUnrealEngineAssociationRepository>();
             var fileDownloader = serviceProvider.GetRequiredService<IFileDownloaderService>();
 
-            var act = async () => await InstallCommand.Execute(name, path, url, logger, fileDownloader, engineAssociationRepository);
+            var act = async () => await InstallCommand.Execute(name, path, isDefault, url, logger, fileDownloader, engineAssociationRepository);
 
             var result = Task.Run(act).Result;
             

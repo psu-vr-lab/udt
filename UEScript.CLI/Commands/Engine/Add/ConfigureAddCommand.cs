@@ -3,7 +3,6 @@ using System.CommandLine.NamingConventionBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using UEScript.CLI.Common;
 using UEScript.CLI.Services;
 using UEScript.Utils.Extensions;
 

@@ -13,6 +13,7 @@ public class UnrealEngineEditorService(IUnrealEngineAssociationRepository unreal
         var unrealEditorPath = UnrealPaths.GetUnrealEngineEditorPath(unrealEngine);
         
         var result = Process.Start(unrealEditorPath, uprojectFile.FullName);
+        
         result.WaitForExit();
     }
 }
