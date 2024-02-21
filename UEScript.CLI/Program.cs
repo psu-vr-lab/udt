@@ -82,6 +82,7 @@ public static class  Program
                         services.AddSingleton<IUnrealEngineAssociationRepository, UnrealEngineEngineAssociationRepository>();
                         services.AddSingleton<IUnrealBuildToolService, UnrealBuildToolService>();
                         services.AddSingleton<IUnrealEngineEditorService, UnrealEngineEditorService>();
+                        services.AddSingleton<IFileDownloaderService, FileDownloaderServiceService>();
                     });
                 });
         

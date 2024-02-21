@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using UEScript.CLI.Commands.Engine.Add;
 using UEScript.CLI.Commands.Engine.Delete;
+using UEScript.CLI.Commands.Engine.Install;
 using UEScript.CLI.Commands.Engine.List;
 using UEScript.CLI.Common;
 using UEScript.CLI.Services;
@@ -27,6 +28,7 @@ public static class ConfigureEngineCommand
         engineCommand.AddListCommand();
         engineCommand.AddAddCommand();
         engineCommand.AddDeleteCommand();
+        engineCommand.AddInstallCommand();
         
         engineCommand.Action = CommandHandler.Create<FileInfo, IHost>((file, host) =>
         {
