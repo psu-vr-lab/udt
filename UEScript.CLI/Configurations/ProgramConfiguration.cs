@@ -26,8 +26,8 @@ public static class ProgramConfiguration
     {
         return new CliConfiguration(ConfigureRootCommand.AddRootCommand());
     }
-    
-    public static IHostBuilder ConfigureHostBuilder(this IHostBuilder host, CliConfiguration cliConfiguration, string[] args)
+
+    private static IHostBuilder ConfigureHostBuilder(this IHostBuilder host, CliConfiguration cliConfiguration, string[] args)
     {
         ConfigureAppConfiguration(host);
 
