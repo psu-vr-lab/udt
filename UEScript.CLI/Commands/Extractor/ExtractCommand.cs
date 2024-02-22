@@ -16,7 +16,7 @@ public static class ExtractCommand
 
     public static Result<string, CommandError> Execute(FileInfo file, FileInfo destinationPath, IArchiveExtractor archiveExtractor, ILogger logger)
     {
-        logger.LogTrace("Unarchive command start execution...");
+        logger.LogTrace("Extract command start execution...");
 
         if (file is null)
             return new CommandError("File is null");
