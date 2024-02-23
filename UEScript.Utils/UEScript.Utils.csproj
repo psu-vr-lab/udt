@@ -12,4 +12,10 @@
       <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     </ItemGroup>
 
+
+
+    <ItemGroup>
+      <None Remove="Setting.json" />
+    </ItemGroup>
+
 </Project>
