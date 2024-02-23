@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.Extensions.Logging;
 using UEScript.CLI.Commands.Engine.Add;
 using UEScript.CLI.Common;
@@ -31,7 +32,9 @@ public static class InstallCommand
         
         logger.LogInformation($"Starting download engine zip from '{url}'...");
         
-        var downloadResult = await DownloadFile(url, fileDownloaderService);
+        var downloadTask = DownloadFile(url, filePath, fileDownloaderService);
+            
+        var downloadResult = downloadTask.Result;
         
         if (downloadResult is null || !downloadResult.IsSuccess)
         {
@@ -40,7 +43,7 @@ public static class InstallCommand
         
         logger.LogInformation($"Starting extract engine zip from '{url}'...");
         
-        var fileExtractorResult = await ExtractDownloadFile(fileExtractor, downloadResult, directory);
+        var fileExtractorResult = await ExtractDownloadFile(fileExtractor, filePath, directory);
         
         if (fileExtractorResult is null || !fileExtractorResult.IsSuccess)
         {
@@ -52,26 +55,37 @@ public static class InstallCommand
         return AddCommand.Execute(name, filePath, isDefault, repository, logger);;
     }
     
-    private static async Task<Result<Stream, CommandError>?> DownloadFile(string url, IFileDownloaderService fileDownloaderService)
+    private static async Task<Result<string, CommandError>?> DownloadFile(string url, FileInfo folder,
+        IFileDownloaderService fileDownloaderService)
     {
-        var downloadResult = default(Result<Stream, CommandError>);
+        var downloadResult = default(Result<string, CommandError>);
 
-        await AnsiConsoleUtils.WrapTaskAroundProgressBar("Downloading: ",async () =>
-        { 
-            downloadResult = await fileDownloaderService.DownloadFileFromUrl(url);
+        await AnsiConsoleUtils.WrapTaskAroundProgressBar("Downloading: ", async (ctx) =>
+        {
+            downloadResult = fileDownloaderService.DownloadFileFromUrl(url, folder, Action);
+
+            void Action(DownloadProgressChangedEventArgs value)
+            {
+                ctx.Increment(value.ProgressPercentage);
+            }
+
+            while (!ctx.IsFinished)
+            {
+                await Task.Delay(300);
+            }
         });
         
         return downloadResult;
     }
     
-    private static async Task<Result<string, CommandError>?> ExtractDownloadFile(IFileExtractor fileExtractor, Result<Stream, CommandError> downloadResult, DirectoryInfo directory)
+    private static async Task<Result<string, CommandError>?> ExtractDownloadFile(IFileExtractor fileExtractor,FileInfo fileInfo, DirectoryInfo directory)
     {
         var fileExtractorResult = default(Result<string, CommandError>);
-        var downloadStream = downloadResult.GetValue();
-
+        await using var stream = new FileStream(fileInfo.FullName, FileMode.Open);
+        
         await AnsiConsoleUtils.WrapTaskAroundProgressBar("Extracting: ", () =>
         {
-            fileExtractorResult = fileExtractor.ExtractStreamToDirectory(downloadStream!, directory);
+            fileExtractorResult = fileExtractor.ExtractStreamToDirectory(stream, directory);
         });
 
         return fileExtractorResult;
