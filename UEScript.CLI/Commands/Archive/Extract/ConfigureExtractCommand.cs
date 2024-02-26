@@ -14,35 +14,42 @@ using UEScript.Utils.Extensions;
 using static System.CommandLine.Help.HelpBuilder;
 using System.Xml.Linq;
 using UEScript.CLI.Commands.Engine.Add;
+using System.IO;
+using UEScript.CLI.Commands.Engine.Install;
+using UEScript.CLI.Services.Impl;
+using UEScript.Utils.Results;
 
-namespace UEScript.CLI.Commands.ArchiveExctractor;
+namespace UEScript.CLI.Commands.Archive.Extract;
+
 
 public static class ConfigureExtractCommand
 {
-    public static void AddExtractCommand(this CliRootCommand rootCommand)
+    public static void AddExtractCommand(this CliCommand rootCommand)
     {
         var extractCommand = new CliCommand("extract", "Exctracts archive to the destination path")
+    {
+
+        new CliArgument<FileInfo>("file")
         {
+            Description = "Archive to extract",
+        },
+        new CliArgument<DirectoryInfo>("destination")
+        {
+            Description = "Destination path",
+        },
+    };
 
-            new CliArgument<FileInfo>("file")
-            {
-                Description = "Archive to extract",
-            },
-            new CliArgument<FileInfo>("destination")
-            {
-                Description = "Destination path",
-            },
-        };
-
-        extractCommand.Action = CommandHandler.Create<FileInfo, FileInfo, IHost>((file, destination, host) =>
+        extractCommand.Action = CommandHandler.Create<FileInfo, DirectoryInfo, IHost>((file, destination, host) =>
         {
             var serviceProvider = host.Services;
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("ExtractCommand");
 
             var archiveExtractor = serviceProvider.GetRequiredService<IArchiveExtractor>();
-            var result = ExtractCommand.Execute(file, destination, archiveExtractor, logger);
+            var result = Task.Run(async () =>
+                await ExtractCommand.ExecuteAsync(file, destination, archiveExtractor, logger)).Result;
             logger.LogResult(result);
+
         });
 
         rootCommand.Add(extractCommand);

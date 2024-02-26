@@ -11,8 +11,8 @@ namespace UEScript.CLI.Services
 {
     public interface IArchiveExtractor
     {
-        public Result<string, CommandError> Extract(FileInfo file, string destinationPath);
-        public Result<string, CommandError> ExtractFromStream(Stream stream, string extension, string destinationPath);
-        public Result<string, CommandError> ExtractZipFromStream(Stream stream, string destinationPath);
+        public Result<string, CommandError> Extract(FileInfo file, string destinationPath, Action<double>? progressBarAction);
+        public Result<string, CommandError> ExtractFromStream(Stream stream, string extension, string destinationPath, Action<double>? progressBarAction);
+        public Result<string, CommandError> ExtractZipFromStream(Stream stream, string destinationPath, Action<double>? progressBarAction);
     }
 }

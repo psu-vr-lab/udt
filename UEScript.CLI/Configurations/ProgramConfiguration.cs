@@ -64,6 +64,7 @@ public static class ProgramConfiguration
             services.AddSingleton<IFileDownloaderService, FileDownloaderService>();
             services.AddSingleton<IFileExtractor, FileExtractor>();
             services.AddSingleton<IArchiveExtractor, ArchiveExtractor>();
+            services.AddSingleton<IArchiveService, ArchiveService>(); 
         });
     }
 

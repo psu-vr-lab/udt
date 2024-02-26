@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using UEScript.Utils.Results;
 using UEScript.CLI.Commands;
+using System.Collections;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Archives;
 using SharpCompress.Common;
@@ -19,84 +20,97 @@ using SharpCompress.Archives.SevenZip;
 using SharpCompress.Archives.Tar;
 using SharpCompress.Archives.GZip;
 using SharpCompress.Common.GZip;
+using System.Linq;
+using SharpCompress;
+using UEScript.CLI.Common;
+using System.Net;
+using Spectre.Console;
 
 namespace UEScript.CLI.Services.Impl;
 
 
 public class ArchiveExtractor(ILogger<ArchiveExtractor> logger) : IArchiveExtractor
 {
-    Result<string, CommandError> ProcessArchive<T, TEntry, TVolume>(T archive, string destinationPath)
+    Result<string, CommandError> ProcessArchive<T, TEntry, TVolume>(T archive, string destinationPath, Action<double>? progressBarAction)
         where T : AbstractArchive<TEntry, TVolume> 
         where TEntry : IArchiveEntry
         where TVolume : IVolume
     {
-        int lastPerc = 0;
-        if (archive is SevenZipArchive)
-            archive.CompressedBytesRead += (sender, e) =>
-            {
-                double progress = (double)e.CurrentFilePartCompressedBytesRead / archive.TotalSize * 100;
-                if (progress >= lastPerc)
-                {
-                    lastPerc += 5;
-                    logger.LogInformation($"Progress: {progress}%");
-                }
-            };
-        else
+        try
         {
+            int lastPerc = 0;
             long totalRead = 0;
-            archive.EntryExtractionEnd += (sender, e) =>
-            {
-                totalRead += e.Item.CompressedSize;
-                double progress = (double)totalRead / archive.TotalSize * 100;
-                if (progress >= lastPerc)
+            if (progressBarAction is not null)
+                progressBarAction(0);
+
+            if (archive is SevenZipArchive)
+                archive.CompressedBytesRead += (sender, e) =>
                 {
-                    lastPerc += 5;
-                    logger.LogInformation($"Progress: {progress}%");
-                }
-            };
+                    double progress = (double)e.CurrentFilePartCompressedBytesRead / archive.TotalSize * 100;
+                    if (progressBarAction is not null)
+                        progressBarAction(progress);
+                };
+            else if (archive is not GZipArchive)
+                archive.EntryExtractionEnd += (sender, e) =>
+                {
+                    totalRead += e.Item.CompressedSize;
+                    double progress = (double)totalRead / archive.TotalSize * 100;
+                    if (progressBarAction is not null)
+                        progressBarAction(progress);
+                };
+
+            archive.Entries
+                .Where(e => !e.IsDirectory)
+                .ForEach(e => e.WriteToDirectory(destinationPath, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true }));
+
+            if (progressBarAction is not null)
+                progressBarAction(100);
+
+            return Result<string, CommandError>.Ok("Archive was successfully extracted to " + destinationPath);
+        }
+        catch (Exception e)
+        {
+            return Result<string, CommandError>.Error(new CommandError($"Error: " + e.Message));
+        }
+    }
+
+    public Result<string, CommandError> ExtractSelector(string extension, string destinationPath, FileInfo? file, bool isFile = true, Stream? stream = null, Action<double>? progressBarAction = null)
+    {
+        if (isFile && file is null)
+            return Result<string, CommandError>.Error(new CommandError("File archive source is not provided (equals null)"));
+
+        if (!isFile && stream is null)
+            return Result<string, CommandError>.Error(new CommandError("Stream archive source is not provided (equals null)"));
+        
+        switch (extension)
+        {
+            case ".zip":
+                return ProcessArchive<ZipArchive, ZipArchiveEntry, ZipVolume>(isFile ? ZipArchive.Open(file!) : ZipArchive.Open(stream!), destinationPath, progressBarAction);
+            case ".rar":
+                return ProcessArchive<RarArchive, RarArchiveEntry, RarVolume>(isFile ? RarArchive.Open(file!) : RarArchive.Open(stream!), destinationPath, progressBarAction);
+            case ".7z":
+                return ProcessArchive<SevenZipArchive, SevenZipArchiveEntry, SevenZipVolume>(isFile ? SevenZipArchive.Open(file!) : SevenZipArchive.Open(stream!), destinationPath, progressBarAction);
+            case ".tar":
+                return ProcessArchive<TarArchive, TarArchiveEntry, TarVolume>(isFile ? TarArchive.Open(file!) : TarArchive.Open(stream!), destinationPath, progressBarAction);
+            case ".gz":
+                return ProcessArchive<GZipArchive, GZipArchiveEntry, GZipVolume>(isFile ? GZipArchive.Open(file!) : GZipArchive.Open(stream!), destinationPath, progressBarAction);
         }
 
-        foreach (var entry in archive.Entries)
-            if (!entry.IsDirectory)
-                entry.WriteToDirectory(destinationPath, new ExtractionOptions(){ Overwrite = true });
-
-        return Result<string, CommandError>.Ok("Archive was successfully extracted to " + destinationPath);
-    }
-    public Result<string, CommandError> Extract(FileInfo file, string destinationPath)
-    {
-        // не придумал как сделать лучше
-
-        if (file.Extension == ".zip")
-            return ProcessArchive<ZipArchive, ZipArchiveEntry, ZipVolume>(ZipArchive.Open(file), destinationPath);
-        if (file.Extension == ".rar")
-            return ProcessArchive<RarArchive, RarArchiveEntry, RarVolume>(RarArchive.Open(file), destinationPath);
-        if (file.Extension == ".7z")
-            return ProcessArchive<SevenZipArchive, SevenZipArchiveEntry, SevenZipVolume>(SevenZipArchive.Open(file), destinationPath);
-        if (file.Extension == ".tar")
-            return ProcessArchive<TarArchive, TarArchiveEntry, TarVolume>(TarArchive.Open(file), destinationPath);
-        if (file.Extension == ".gz")
-            return ProcessArchive<GZipArchive, GZipArchiveEntry, GZipVolume>(GZipArchive.Open(file), destinationPath);
-
-        return Result<string, CommandError>.Error(new CommandError("Unknown archive type"));
-    }
-    public Result<string, CommandError> ExtractFromStream(Stream stream, string extension, string destinationPath)
-    {
-        if (extension == ".zip")
-            return ProcessArchive<ZipArchive, ZipArchiveEntry, ZipVolume>(ZipArchive.Open(stream), destinationPath);
-        if (extension == ".rar")
-            return ProcessArchive<RarArchive, RarArchiveEntry, RarVolume>(RarArchive.Open(stream), destinationPath);
-        if (extension == ".7z")
-            return ProcessArchive<SevenZipArchive, SevenZipArchiveEntry, SevenZipVolume>(SevenZipArchive.Open(stream), destinationPath);
-        if (extension == ".tar")
-            return ProcessArchive<TarArchive, TarArchiveEntry, TarVolume>(TarArchive.Open(stream), destinationPath);
-        if (extension == ".gz")
-            return ProcessArchive<GZipArchive, GZipArchiveEntry, GZipVolume>(GZipArchive.Open(stream), destinationPath);
-
         return Result<string, CommandError>.Error(new CommandError("Unknown archive type"));
     }
 
-    public Result<string, CommandError> ExtractZipFromStream(Stream stream, string destinationPath)
+    public Result<string, CommandError> Extract(FileInfo file, string destinationPath, Action<double>? progressBarAction)
     {
-        return ExtractFromStream(stream, ".zip", destinationPath);
+        return ExtractSelector(file.Extension, destinationPath, file, true, null, progressBarAction);
+    }
+
+    public Result<string, CommandError> ExtractFromStream(Stream stream, string extension, string destinationPath, Action<double>? progressBarAction)
+    {
+        return ExtractSelector(extension, destinationPath, null, false, stream, progressBarAction);
+    }
+
+    public Result<string, CommandError> ExtractZipFromStream(Stream stream, string destinationPath, Action<double>? progressBarAction)
+    {
+        return ExtractFromStream(stream, ".zip", destinationPath, progressBarAction);
     }
 }
